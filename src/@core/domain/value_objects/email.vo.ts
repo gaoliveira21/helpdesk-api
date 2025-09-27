@@ -16,7 +16,7 @@ export class Email implements ValueObject<string> {
     return this._value;
   }
 
-  isEqual(vo: ValueObject<string>): boolean {
+  isEqual(vo: Email): boolean {
     return this._value === vo.value;
   }
 

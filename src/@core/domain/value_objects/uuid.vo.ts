@@ -22,7 +22,7 @@ export class Uuid implements ValueObject<string> {
     return this._value;
   }
 
-  isEqual(vo: ValueObject<string>): boolean {
+  isEqual(vo: Uuid): boolean {
     return this._value === vo.value;
   }
 
