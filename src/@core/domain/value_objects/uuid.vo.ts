@@ -3,7 +3,7 @@ import { v7 as uuidV7, validate } from 'uuid';
 import { ValueObject } from './value_object.interface';
 
 export class Uuid implements ValueObject<string> {
-  private _value: string;
+  private readonly _value: string;
 
   constructor(value?: string) {
     if (!value) {
