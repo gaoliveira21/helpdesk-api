@@ -1,10 +1,11 @@
-import { Email } from '../value_objects/email.vo';
-import { Uuid } from '../value_objects/uuid.vo';
+import { Email, Uuid, PasswordHash } from '../value_objects';
+
 import { Entity } from './entity.abstract';
 
 export class AdminEntity extends Entity {
   private _name: string;
   private _email: Email;
+  private _passwordHash: PasswordHash;
   private _createdAt: Date;
   private _updatedAt: Date;
 
@@ -12,24 +13,32 @@ export class AdminEntity extends Entity {
     id: Uuid,
     name: string,
     email: Email,
+    passwordHash: PasswordHash,
     createdAt?: Date,
     updatedAt?: Date,
   ) {
     super(id);
     this._name = name;
     this._email = email;
+    this._passwordHash = passwordHash;
     this._createdAt = createdAt ?? new Date();
     this._updatedAt = updatedAt ?? new Date();
   }
 
-  static create(name: string, email: string): AdminEntity {
-    return new AdminEntity(new Uuid(), name, new Email(email));
+  static async create(
+    name: string,
+    email: string,
+    plainTextPassword: string,
+  ): Promise<AdminEntity> {
+    const passwordHash = await PasswordHash.create(plainTextPassword);
+    return new AdminEntity(new Uuid(), name, new Email(email), passwordHash);
   }
 
   static restore(
     id: string,
     name: string,
     email: string,
+    passwordHash: string,
     createdAt: Date,
     updatedAt: Date,
   ): AdminEntity {
@@ -37,6 +46,7 @@ export class AdminEntity extends Entity {
       new Uuid(id),
       name,
       new Email(email),
+      PasswordHash.fromHash(passwordHash),
       createdAt,
       updatedAt,
     );
@@ -48,6 +58,10 @@ export class AdminEntity extends Entity {
 
   get email(): Email {
     return this._email;
+  }
+
+  get passwordHash(): PasswordHash {
+    return this._passwordHash;
   }
 
   get createdAt(): Date {
