@@ -3,11 +3,11 @@ import { Email, Uuid, PasswordHash } from '../value_objects';
 import { Entity } from './entity.abstract';
 
 export abstract class UserEntity extends Entity {
-  private _name: string;
-  private _email: Email;
-  private _passwordHash: PasswordHash;
-  private _createdAt: Date;
-  private _updatedAt: Date;
+  protected _name: string;
+  protected _email: Email;
+  protected _passwordHash: PasswordHash;
+  protected _createdAt: Date;
+  protected _updatedAt: Date;
 
   protected constructor(
     id: Uuid,
