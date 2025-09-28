@@ -1,13 +1,24 @@
 import { Hour, Uuid } from '../value_objects';
+import { AdminEntity } from './admin.entity';
 
 import { TechnicianEntity } from './technician.entity';
 
 describe('TechnicianEntity', () => {
+  const createdBy = AdminEntity.restore(
+    new Uuid().toString(),
+    'Admin User',
+    'admin.user@example.com',
+    'adminpassword',
+    new Date(),
+    new Date(),
+  );
+
   it('should create a TechnicianEntity with default shift when no shift is provided', async () => {
     const technician = await TechnicianEntity.create(
       'John Doe',
       'john.doe@example.com',
       'password123',
+      createdBy,
     );
 
     expect(technician).toBeInstanceOf(TechnicianEntity);
@@ -21,6 +32,7 @@ describe('TechnicianEntity', () => {
       'Jane Smith',
       'jane.smith@example.com',
       'password456',
+      createdBy,
       customShift,
     );
 
@@ -44,6 +56,7 @@ describe('TechnicianEntity', () => {
       email,
       passwordHash,
       shift,
+      createdBy,
       createdAt,
       updatedAt,
     );
@@ -59,6 +72,7 @@ describe('TechnicianEntity', () => {
       'Bob Brown',
       'bob.brown@example.com',
       'password789',
+      createdBy,
       customShift,
     );
 
@@ -66,7 +80,7 @@ describe('TechnicianEntity', () => {
     expect(technician.toString()).toBe(
       `TechnicianEntity { id: ${technician.id.toString()}, name: ${technician.name}, email: ${technician.email.toString()}, createdAt: ${technician.createdAt.toISOString()}, updatedAt: ${technician.updatedAt.toISOString()}, shift: [${technician.shift
         .map((hour) => hour.toString())
-        .join(', ')}] }`,
+        .join(', ')}], createdBy: ${technician.createdBy.toString()} }`,
     );
   });
 });

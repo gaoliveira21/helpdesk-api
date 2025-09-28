@@ -1,4 +1,5 @@
 import { Email, Uuid, PasswordHash, Hour } from '../value_objects';
+import { AdminEntity } from './admin.entity';
 
 import { UserEntity } from './user.abstract';
 
@@ -16,6 +17,7 @@ export class TechnicianEntity extends UserEntity {
     new Hour(17),
   ];
   private _shift: Hour[];
+  private _createdBy: AdminEntity;
 
   private constructor(
     id: Uuid,
@@ -23,17 +25,20 @@ export class TechnicianEntity extends UserEntity {
     email: Email,
     passwordHash: PasswordHash,
     shift: Hour[],
+    createdBy: AdminEntity,
     createdAt?: Date,
     updatedAt?: Date,
   ) {
     super(id, name, email, passwordHash, createdAt, updatedAt);
     this._shift = shift;
+    this._createdBy = createdBy;
   }
 
   static async create(
     name: string,
     email: string,
     plainTextPassword: string,
+    createdBy: AdminEntity,
     shift?: number[],
   ): Promise<TechnicianEntity> {
     const passwordHash = await PasswordHash.create(plainTextPassword);
@@ -45,6 +50,7 @@ export class TechnicianEntity extends UserEntity {
       shift
         ? shift.map((hour) => new Hour(hour))
         : TechnicianEntity.DEFAULT_SHIFT,
+      createdBy,
     );
   }
 
@@ -54,6 +60,7 @@ export class TechnicianEntity extends UserEntity {
     email: string,
     passwordHash: string,
     shift: number[],
+    createdBy: AdminEntity,
     createdAt: Date,
     updatedAt: Date,
   ): TechnicianEntity {
@@ -63,6 +70,7 @@ export class TechnicianEntity extends UserEntity {
       new Email(email),
       PasswordHash.fromHash(passwordHash),
       shift.map((hour) => new Hour(hour)),
+      createdBy,
       createdAt,
       updatedAt,
     );
@@ -72,9 +80,13 @@ export class TechnicianEntity extends UserEntity {
     return this._shift;
   }
 
+  get createdBy(): AdminEntity {
+    return this._createdBy;
+  }
+
   toString(): string {
     return `TechnicianEntity { id: ${this._id.toString()}, name: ${this._name}, email: ${this._email.toString()}, createdAt: ${this._createdAt.toISOString()}, updatedAt: ${this._updatedAt.toISOString()}, shift: [${this._shift
       .map((hour) => hour.toString())
-      .join(', ')}] }`;
+      .join(', ')}], createdBy: ${this._createdBy.toString()} }`;
   }
 }
