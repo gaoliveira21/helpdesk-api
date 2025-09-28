@@ -1,14 +1,8 @@
 import { Email, Uuid, PasswordHash } from '../value_objects';
 
-import { Entity } from './entity.abstract';
+import { UserEntity } from './user.abstract';
 
-export class AdminEntity extends Entity {
-  private _name: string;
-  private _email: Email;
-  private _passwordHash: PasswordHash;
-  private _createdAt: Date;
-  private _updatedAt: Date;
-
+export class AdminEntity extends UserEntity {
   private constructor(
     id: Uuid,
     name: string,
@@ -17,12 +11,7 @@ export class AdminEntity extends Entity {
     createdAt?: Date,
     updatedAt?: Date,
   ) {
-    super(id);
-    this._name = name;
-    this._email = email;
-    this._passwordHash = passwordHash;
-    this._createdAt = createdAt ?? new Date();
-    this._updatedAt = updatedAt ?? new Date();
+    super(id, name, email, passwordHash, createdAt, updatedAt);
   }
 
   static async create(
@@ -50,39 +39,5 @@ export class AdminEntity extends Entity {
       createdAt,
       updatedAt,
     );
-  }
-
-  get name(): string {
-    return this._name;
-  }
-
-  get email(): Email {
-    return this._email;
-  }
-
-  get passwordHash(): PasswordHash {
-    return this._passwordHash;
-  }
-
-  get createdAt(): Date {
-    return this._createdAt;
-  }
-
-  get updatedAt(): Date {
-    return this._updatedAt;
-  }
-
-  toString(): string {
-    return `AdminEntity { id: ${this._id.toString()}, name: ${this._name}, email: ${this._email.toString()}, createdAt: ${this._createdAt.toISOString()}, updatedAt: ${this._updatedAt.toISOString()} }`;
-  }
-
-  toJSON() {
-    return {
-      id: this._id.toString(),
-      name: this._name,
-      email: this._email.toString(),
-      createdAt: this._createdAt.toISOString(),
-      updatedAt: this._updatedAt.toISOString(),
-    };
   }
 }
