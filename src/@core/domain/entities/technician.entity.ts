@@ -3,6 +3,25 @@ import { AdminEntity } from './admin.entity';
 
 import { UserEntity } from './user.abstract';
 
+export type CreateTechnicianProps = {
+  name: string;
+  email: string;
+  plainTextPassword: string;
+  createdBy: AdminEntity;
+  shift?: number[];
+};
+
+export type RestoreTechnicianProps = {
+  id: string;
+  name: string;
+  email: string;
+  passwordHash: string;
+  shift: number[];
+  createdBy: AdminEntity;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export class TechnicianEntity extends UserEntity {
   public static readonly DEFAULT_SHIFT: Hour[] = [
     new Hour(8),
@@ -34,13 +53,13 @@ export class TechnicianEntity extends UserEntity {
     this._createdBy = createdBy;
   }
 
-  static async create(
-    name: string,
-    email: string,
-    plainTextPassword: string,
-    createdBy: AdminEntity,
-    shift?: number[],
-  ): Promise<TechnicianEntity> {
+  static async create({
+    name,
+    email,
+    plainTextPassword,
+    createdBy,
+    shift,
+  }: CreateTechnicianProps): Promise<TechnicianEntity> {
     const passwordHash = await PasswordHash.create(plainTextPassword);
     return new TechnicianEntity(
       new Uuid(),
@@ -54,16 +73,16 @@ export class TechnicianEntity extends UserEntity {
     );
   }
 
-  static restore(
-    id: string,
-    name: string,
-    email: string,
-    passwordHash: string,
-    shift: number[],
-    createdBy: AdminEntity,
-    createdAt: Date,
-    updatedAt: Date,
-  ): TechnicianEntity {
+  static restore({
+    id,
+    name,
+    email,
+    passwordHash,
+    shift,
+    createdBy,
+    createdAt,
+    updatedAt,
+  }: RestoreTechnicianProps): TechnicianEntity {
     return new TechnicianEntity(
       new Uuid(id),
       name,

@@ -3,11 +3,11 @@ import { AdminEntity } from './admin.entity';
 
 describe('AdminEntity', () => {
   it('should create a new AdminEntity', async () => {
-    const admin = await AdminEntity.create(
-      'John Doe',
-      'john.doe@example.com',
-      'mySecurePassword',
-    );
+    const admin = await AdminEntity.create({
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      plainTextPassword: 'mySecurePassword',
+    });
     expect(admin).toBeInstanceOf(AdminEntity);
     expect(admin.id).toBeDefined();
     expect(admin.name).toBe('John Doe');
@@ -22,14 +22,14 @@ describe('AdminEntity', () => {
     const createdAt = new Date();
     const updatedAt = new Date();
     const id = new Uuid().value;
-    const admin = AdminEntity.restore(
+    const admin = AdminEntity.restore({
       id,
-      'Jane Doe',
-      'jane.doe@example.com',
-      'hashedPassword123',
+      name: 'Jane Doe',
+      email: 'jane.doe@example.com',
+      passwordHash: 'hashedPassword123',
       createdAt,
       updatedAt,
-    );
+    });
     expect(admin).toBeInstanceOf(AdminEntity);
     expect(admin.id.value).toBe(id);
     expect(admin.name).toBe('Jane Doe');
@@ -40,46 +40,46 @@ describe('AdminEntity', () => {
   });
 
   it('should check equality between two AdminEntity instances', async () => {
-    const admin1 = await AdminEntity.create(
-      'Alice',
-      'alice@example.com',
-      'mySecurePassword',
-    );
-    const admin2 = AdminEntity.restore(
-      admin1.id.value,
-      admin1.name,
-      admin1.email.value,
-      admin1.passwordHash.value,
-      admin1.createdAt,
-      admin1.updatedAt,
-    );
-    const admin3 = await AdminEntity.create(
-      'Bob',
-      'bob@example.com',
-      'anotherPassword',
-    );
+    const admin1 = await AdminEntity.create({
+      name: 'Alice',
+      email: 'alice@example.com',
+      plainTextPassword: 'mySecurePassword',
+    });
+    const admin2 = AdminEntity.restore({
+      id: admin1.id.value,
+      name: admin1.name,
+      email: admin1.email.value,
+      passwordHash: admin1.passwordHash.value,
+      createdAt: admin1.createdAt,
+      updatedAt: admin1.updatedAt,
+    });
+    const admin3 = await AdminEntity.create({
+      name: 'Bob',
+      email: 'bob@example.com',
+      plainTextPassword: 'anotherPassword',
+    });
 
     expect(admin1.isEqual(admin2)).toBe(true);
     expect(admin1.isEqual(admin3)).toBe(false);
   });
 
   it('should convert AdminEntity to string', async () => {
-    const admin = await AdminEntity.create(
-      'Charlie',
-      'charlie@example.com',
-      'pass123',
-    );
+    const admin = await AdminEntity.create({
+      name: 'Charlie',
+      email: 'charlie@example.com',
+      plainTextPassword: 'pass123',
+    });
     expect(admin.toString()).toBe(
       `AdminEntity { id: ${admin.id.value}, name: Charlie, email: charlie@example.com, createdAt: ${admin.createdAt.toISOString()}, updatedAt: ${admin.updatedAt.toISOString()} }`,
     );
   });
 
   it('should convert AdminEntity to JSON', async () => {
-    const admin = await AdminEntity.create(
-      'Dave',
-      'dave@example.com',
-      'pass123',
-    );
+    const admin = await AdminEntity.create({
+      name: 'Dave',
+      email: 'dave@example.com',
+      plainTextPassword: 'pass123',
+    });
     expect(admin.toJSON()).toEqual({
       id: admin.id.value,
       name: admin.name,

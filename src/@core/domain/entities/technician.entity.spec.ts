@@ -4,22 +4,22 @@ import { AdminEntity } from './admin.entity';
 import { TechnicianEntity } from './technician.entity';
 
 describe('TechnicianEntity', () => {
-  const createdBy = AdminEntity.restore(
-    new Uuid().toString(),
-    'Admin User',
-    'admin.user@example.com',
-    'adminpassword',
-    new Date(),
-    new Date(),
-  );
+  const createdBy = AdminEntity.restore({
+    id: new Uuid().toString(),
+    name: 'Admin User',
+    email: 'admin.user@example.com',
+    passwordHash: 'adminpassword',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
 
   it('should create a TechnicianEntity with default shift when no shift is provided', async () => {
-    const technician = await TechnicianEntity.create(
-      'John Doe',
-      'john.doe@example.com',
-      'password123',
+    const technician = await TechnicianEntity.create({
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      plainTextPassword: 'password123',
       createdBy,
-    );
+    });
 
     expect(technician).toBeInstanceOf(TechnicianEntity);
     expect(technician.shift).toEqual(TechnicianEntity.DEFAULT_SHIFT);
@@ -28,13 +28,13 @@ describe('TechnicianEntity', () => {
 
   it('should create a TechnicianEntity with provided shift', async () => {
     const customShift = [8, 9, 10, 11, 12];
-    const technician = await TechnicianEntity.create(
-      'Jane Smith',
-      'jane.smith@example.com',
-      'password456',
+    const technician = await TechnicianEntity.create({
+      name: 'Jane Smith',
+      email: 'jane.smith@example.com',
+      plainTextPassword: 'password456',
       createdBy,
-      customShift,
-    );
+      shift: customShift,
+    });
 
     expect(technician).toBeInstanceOf(TechnicianEntity);
     expect(technician.shift).toEqual(customShift.map((hour) => new Hour(hour)));
@@ -50,7 +50,7 @@ describe('TechnicianEntity', () => {
     const createdAt = new Date();
     const updatedAt = new Date();
 
-    const technician = TechnicianEntity.restore(
+    const technician = TechnicianEntity.restore({
       id,
       name,
       email,
@@ -59,7 +59,7 @@ describe('TechnicianEntity', () => {
       createdBy,
       createdAt,
       updatedAt,
-    );
+    });
 
     expect(technician).toBeInstanceOf(TechnicianEntity);
     expect(technician.shift).toEqual(shift.map((hour) => new Hour(hour)));
@@ -68,13 +68,13 @@ describe('TechnicianEntity', () => {
 
   it('should have a proper string representation', async () => {
     const customShift = [8, 9, 10, 11, 12];
-    const technician = await TechnicianEntity.create(
-      'Bob Brown',
-      'bob.brown@example.com',
-      'password789',
+    const technician = await TechnicianEntity.create({
+      name: 'Bob Brown',
+      email: 'bob.brown@example.com',
+      plainTextPassword: 'password789',
       createdBy,
-      customShift,
-    );
+      shift: customShift,
+    });
 
     expect(technician).toBeInstanceOf(TechnicianEntity);
     expect(technician.toString()).toBe(

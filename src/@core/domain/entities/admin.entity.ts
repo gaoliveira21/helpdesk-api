@@ -2,6 +2,21 @@ import { Email, Uuid, PasswordHash } from '../value_objects';
 
 import { UserEntity } from './user.abstract';
 
+export type CreateAdminProps = {
+  name: string;
+  email: string;
+  plainTextPassword: string;
+};
+
+export type RestoreAdminProps = {
+  id: string;
+  name: string;
+  email: string;
+  passwordHash: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export class AdminEntity extends UserEntity {
   private constructor(
     id: Uuid,
@@ -14,23 +29,23 @@ export class AdminEntity extends UserEntity {
     super(id, name, email, passwordHash, createdAt, updatedAt);
   }
 
-  static async create(
-    name: string,
-    email: string,
-    plainTextPassword: string,
-  ): Promise<AdminEntity> {
+  static async create({
+    name,
+    email,
+    plainTextPassword,
+  }: CreateAdminProps): Promise<AdminEntity> {
     const passwordHash = await PasswordHash.create(plainTextPassword);
     return new AdminEntity(new Uuid(), name, new Email(email), passwordHash);
   }
 
-  static restore(
-    id: string,
-    name: string,
-    email: string,
-    passwordHash: string,
-    createdAt: Date,
-    updatedAt: Date,
-  ): AdminEntity {
+  static restore({
+    id,
+    name,
+    email,
+    passwordHash,
+    createdAt,
+    updatedAt,
+  }: RestoreAdminProps): AdminEntity {
     return new AdminEntity(
       new Uuid(id),
       name,
