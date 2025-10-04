@@ -3,11 +3,18 @@ import {
   CreateTechnicianOutput,
   CreateTechnicianUseCase,
 } from 'src/@core/domain/usecases/create_technician.usecase';
+import { TechnicianEntity } from 'src/@core/domain/entities';
 
 import { AdminRepository } from '../ports/admin.repository';
+import { PasswordGenerator } from '../ports/password.generator';
+import { TechnicianRepository } from '../ports/technician.repository';
 
 export class CreateTechnician implements CreateTechnicianUseCase {
-  constructor(private readonly adminRepository: AdminRepository) {}
+  constructor(
+    private readonly adminRepository: AdminRepository,
+    private readonly passwordGenerator: PasswordGenerator,
+    private readonly technicianRepository: TechnicianRepository,
+  ) {}
 
   async execute(input: CreateTechnicianInput): Promise<CreateTechnicianOutput> {
     const admin = await this.adminRepository.findById(input.adminId);
@@ -15,8 +22,20 @@ export class CreateTechnician implements CreateTechnicianUseCase {
       throw new Error('Admin not found');
     }
 
+    const password = this.passwordGenerator.generate();
+
+    const technician = await TechnicianEntity.create({
+      name: input.name,
+      email: input.email,
+      plainTextPassword: password,
+      createdBy: admin,
+      shift: input.shift,
+    });
+
+    await this.technicianRepository.save(technician);
+
     return {
-      id: 'generated-id',
+      id: technician.id.value,
     };
   }
 }
