@@ -1,14 +1,31 @@
 import { CreateTechnicianInput } from 'src/@core/domain/usecases/create_technician.usecase';
-import { InMemoryAdminRepository } from 'src/@core/adapters/repositories/in_memory';
+import {
+  InMemoryAdminRepository,
+  InMemoryTechnicianRepository,
+} from 'src/@core/adapters/repositories/in_memory';
 
 import { CreateTechnician } from './create_technician.usecase';
+import { AdminEntity } from 'src/@core/domain/entities';
 
 describe('CreateTechnicianUseCase', () => {
   const createUseCase = () => {
+    const passwordGenerator = {
+      generate: jest.fn(),
+    };
     const adminRepository = new InMemoryAdminRepository();
-    const useCase = new CreateTechnician(adminRepository);
+    const technicianRepository = new InMemoryTechnicianRepository();
+    const useCase = new CreateTechnician(
+      adminRepository,
+      passwordGenerator,
+      technicianRepository,
+    );
 
-    return { useCase, adminRepository };
+    return {
+      useCase,
+      adminRepository,
+      technicianRepository,
+      passwordGenerator,
+    };
   };
 
   it('should throw an error if admin is not found', async () => {
@@ -17,7 +34,6 @@ describe('CreateTechnicianUseCase', () => {
     const input: CreateTechnicianInput = {
       name: 'John Doe',
       email: 'john.doe@example.com',
-      password: 'securepassword',
       adminId: 'non-existent-admin-id',
     };
 
@@ -25,5 +41,46 @@ describe('CreateTechnicianUseCase', () => {
     expect(adminRepository.findById).toHaveBeenCalledWith(
       'non-existent-admin-id',
     );
+  });
+
+  it('should create a technician with a generated password successfully', async () => {
+    const {
+      useCase,
+      adminRepository,
+      passwordGenerator,
+      technicianRepository,
+    } = createUseCase();
+
+    const admin = await AdminEntity.create({
+      name: 'Admin User',
+      email: 'admin@example.com',
+      plainTextPassword: 'adminpassword',
+    });
+    await adminRepository.save(admin);
+
+    const technicianPassword = 'securepassword';
+    passwordGenerator.generate = jest
+      .fn()
+      .mockReturnValueOnce(technicianPassword);
+
+    const input: CreateTechnicianInput = {
+      name: 'Jane Smith',
+      email: 'jane.smith@example.com',
+      adminId: admin.id.value,
+      shift: [1, 2, 3],
+    };
+    const output = await useCase.execute(input);
+
+    const technician = await technicianRepository.findById(output.id);
+
+    expect(technician).toBeDefined();
+    expect(technician?.name).toBe(input.name);
+    expect(technician?.email.value).toBe(input.email);
+    expect(technician?.createdBy.id.value).toBe(admin.id.value);
+    expect(technician?.shift.map((h) => h.value)).toEqual(input.shift);
+    expect(technician?.passwordHash).not.toBe(technicianPassword);
+    expect(output).toHaveProperty('id');
+    expect(output.id).toBe(technician?.id.value);
+    expect(passwordGenerator.generate).toHaveBeenCalledTimes(1);
   });
 });
