@@ -1,17 +1,16 @@
+import { CryptoPasswordGenerator } from 'src/@core/adapters/password_generator/crypto_password_generator';
 import { CreateTechnicianInput } from 'src/@core/domain/usecases/create_technician.usecase';
 import {
   InMemoryAdminRepository,
   InMemoryTechnicianRepository,
 } from 'src/@core/adapters/repositories/in_memory';
+import { AdminEntity } from 'src/@core/domain/entities';
 
 import { CreateTechnician } from './create_technician.usecase';
-import { AdminEntity } from 'src/@core/domain/entities';
 
 describe('CreateTechnicianUseCase', () => {
   const createUseCase = () => {
-    const passwordGenerator = {
-      generate: jest.fn(),
-    };
+    const passwordGenerator = new CryptoPasswordGenerator();
     const adminRepository = new InMemoryAdminRepository();
     const technicianRepository = new InMemoryTechnicianRepository();
     const useCase = new CreateTechnician(
