@@ -1,4 +1,4 @@
-import { AdminRepository } from 'src/@core/application/ports/admin.repository';
+import { AdminRepository } from 'src/@core/application/ports/admin_repository.port';
 import { AdminEntity } from 'src/@core/domain/entities';
 
 export class InMemoryAdminRepository implements AdminRepository {

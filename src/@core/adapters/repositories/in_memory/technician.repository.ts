@@ -1,4 +1,4 @@
-import { TechnicianRepository } from 'src/@core/application/ports/technician.repository';
+import { TechnicianRepository } from 'src/@core/application/ports/technician_repository.port';
 import { TechnicianEntity } from 'src/@core/domain/entities';
 
 export class InMemoryTechnicianRepository implements TechnicianRepository {

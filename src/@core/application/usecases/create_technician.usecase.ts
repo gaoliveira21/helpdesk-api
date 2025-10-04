@@ -5,9 +5,9 @@ import {
 } from 'src/@core/domain/usecases/create_technician.usecase';
 import { TechnicianEntity } from 'src/@core/domain/entities';
 
-import { AdminRepository } from '../ports/admin.repository';
-import { PasswordGenerator } from '../ports/password.generator';
-import { TechnicianRepository } from '../ports/technician.repository';
+import { AdminRepository } from '../ports/admin_repository.port';
+import { PasswordGenerator } from '../ports/password_generator.port';
+import { TechnicianRepository } from '../ports/technician_repository.port';
 
 export class CreateTechnician implements CreateTechnicianUseCase {
   constructor(

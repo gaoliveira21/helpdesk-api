@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-import { PasswordGenerator } from 'src/@core/application/ports/password.generator';
+import { PasswordGenerator } from 'src/@core/application/ports/password_generator.port';
 
 export class CryptoPasswordGenerator implements PasswordGenerator {
   private readonly CHARSET =
