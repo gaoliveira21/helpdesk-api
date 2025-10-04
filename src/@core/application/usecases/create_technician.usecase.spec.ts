@@ -10,6 +10,9 @@ import { CreateTechnician } from './create_technician.usecase';
 
 describe('CreateTechnicianUseCase', () => {
   const createUseCase = () => {
+    const emailSender = {
+      sendEmail: jest.fn(),
+    };
     const passwordGenerator = new CryptoPasswordGenerator();
     const adminRepository = new InMemoryAdminRepository();
     const technicianRepository = new InMemoryTechnicianRepository();
@@ -17,6 +20,7 @@ describe('CreateTechnicianUseCase', () => {
       adminRepository,
       passwordGenerator,
       technicianRepository,
+      emailSender,
     );
 
     return {
@@ -24,6 +28,7 @@ describe('CreateTechnicianUseCase', () => {
       adminRepository,
       technicianRepository,
       passwordGenerator,
+      emailSender,
     };
   };
 
@@ -42,12 +47,13 @@ describe('CreateTechnicianUseCase', () => {
     );
   });
 
-  it('should create a technician with a generated password successfully', async () => {
+  it('should create a technician with a generated password and send it via email', async () => {
     const {
       useCase,
       adminRepository,
       passwordGenerator,
       technicianRepository,
+      emailSender,
     } = createUseCase();
 
     const admin = await AdminEntity.create({
@@ -81,5 +87,10 @@ describe('CreateTechnicianUseCase', () => {
     expect(output).toHaveProperty('id');
     expect(output.id).toBe(technician?.id.value);
     expect(passwordGenerator.generate).toHaveBeenCalledTimes(1);
+    expect(emailSender.sendEmail).toHaveBeenCalledWith({
+      to: technician?.email.value,
+      subject: 'Detalhes da sua conta de técnico',
+      body: `Olá ${technician?.name},\n\nSua conta foi criada. Sua senha é: ${technicianPassword}\n\nPor favor, altere sua senha após o primeiro login.`,
+    });
   });
 });
