@@ -1,4 +1,5 @@
 import { Email, Uuid, PasswordHash } from '../value_objects';
+import { CreateTechnicianProps, TechnicianEntity } from './technician.entity';
 
 import { UserEntity } from './user.abstract';
 
@@ -54,5 +55,11 @@ export class AdminEntity extends UserEntity {
       createdAt,
       updatedAt,
     );
+  }
+
+  async createTechnician(
+    input: Omit<CreateTechnicianProps, 'createdBy'>,
+  ): Promise<TechnicianEntity> {
+    return TechnicianEntity.create({ ...input, createdBy: this });
   }
 }

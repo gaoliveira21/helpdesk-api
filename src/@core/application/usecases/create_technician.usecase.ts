@@ -3,7 +3,6 @@ import {
   CreateTechnicianOutput,
   CreateTechnicianUseCase,
 } from 'src/@core/domain/usecases/create_technician.usecase';
-import { TechnicianEntity } from 'src/@core/domain/entities';
 
 import { AdminRepository } from '../ports/admin_repository.port';
 import { PasswordGenerator } from '../ports/password_generator.port';
@@ -26,11 +25,10 @@ export class CreateTechnician implements CreateTechnicianUseCase {
 
     const password = this.passwordGenerator.generate();
 
-    const technician = await TechnicianEntity.create({
+    const technician = await admin.createTechnician({
       name: input.name,
       email: input.email,
       plainTextPassword: password,
-      createdBy: admin,
       shift: input.shift,
     });
 

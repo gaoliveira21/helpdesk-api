@@ -1,5 +1,6 @@
 import { Uuid } from '../value_objects/uuid.vo';
 import { AdminEntity } from './admin.entity';
+import { TechnicianEntity } from './technician.entity';
 
 describe('AdminEntity', () => {
   it('should create a new AdminEntity', async () => {
@@ -87,5 +88,27 @@ describe('AdminEntity', () => {
       createdAt: admin.createdAt.toISOString(),
       updatedAt: admin.updatedAt.toISOString(),
     });
+  });
+
+  it('should create a TechnicianEntity from AdminEntity', async () => {
+    const admin = await AdminEntity.create({
+      name: 'Eve',
+      email: 'eve@example.com',
+      plainTextPassword: 'pass123',
+    });
+    const technician = await admin.createTechnician({
+      name: 'Tech One',
+      email: 'tech.one@example.com',
+      plainTextPassword: 'pass123',
+    });
+    expect(technician).toBeInstanceOf(TechnicianEntity);
+    expect(technician.id).toBeDefined();
+    expect(technician.name).toBe('Tech One');
+    expect(technician.email.value).toBe('tech.one@example.com');
+    expect(technician.passwordHash).toBeDefined();
+    expect(technician.passwordHash).not.toBe('pass123');
+    expect(technician.createdBy.id.value).toBe(admin.id.value);
+    expect(technician.createdAt).toBeInstanceOf(Date);
+    expect(technician.updatedAt).toBeInstanceOf(Date);
   });
 });
