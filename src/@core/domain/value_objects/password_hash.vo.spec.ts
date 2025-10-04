@@ -1,6 +1,12 @@
 import { PasswordHash } from './password_hash.vo';
 
 describe('PasswordHash Value Object', () => {
+  it('should throw an error for passwords shorter than 6 characters', async () => {
+    await expect(PasswordHash.create('123')).rejects.toThrow(
+      'Password must be at least 6 characters long',
+    );
+  });
+
   it('should create a PasswordHash from plain text', async () => {
     const plainText = 'mySecurePassword';
     const passwordHash = await PasswordHash.create(plainText);
