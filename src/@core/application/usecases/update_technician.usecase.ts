@@ -1,0 +1,17 @@
+import {
+  UpdateTechnicianInput,
+  UpdateTechnicianUseCase,
+} from 'src/@core/domain/usecases/update_technician.usecase';
+
+import { AdminRepository } from '../ports/admin_repository.port';
+
+export class UpdateTechnician implements UpdateTechnicianUseCase {
+  constructor(private readonly adminRepository: AdminRepository) {}
+
+  async execute(input: UpdateTechnicianInput): Promise<void> {
+    const admin = await this.adminRepository.findById(input.adminId);
+    if (!admin) {
+      throw new Error('Admin not found');
+    }
+  }
+}
