@@ -18,6 +18,12 @@ export type RestoreAdminProps = {
   updatedAt: Date;
 };
 
+export type UpdateTechnicianProps = {
+  name?: string;
+  email?: string;
+  shift?: number[];
+};
+
 export class AdminEntity extends UserEntity {
   private constructor(
     id: Uuid,
@@ -61,5 +67,14 @@ export class AdminEntity extends UserEntity {
     input: Omit<CreateTechnicianProps, 'createdBy'>,
   ): Promise<TechnicianEntity> {
     return TechnicianEntity.create({ ...input, createdBy: this });
+  }
+
+  updateTechnician(
+    technician: TechnicianEntity,
+    { name, email, shift }: UpdateTechnicianProps,
+  ) {
+    if (name) technician.changeName(name);
+    if (email) technician.changeEmail(email);
+    if (shift) technician.changeShift(shift);
   }
 }

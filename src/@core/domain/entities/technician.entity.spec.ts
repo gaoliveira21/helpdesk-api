@@ -83,4 +83,43 @@ describe('TechnicianEntity', () => {
         .join(', ')}], createdBy: ${technician.createdBy.toString()} }`,
     );
   });
+
+  it('should change the shift of the technician', async () => {
+    const technician = await TechnicianEntity.create({
+      name: 'Charlie Green',
+      email: 'charlie.green@example.com',
+      plainTextPassword: 'password123',
+      createdBy,
+    });
+
+    technician.changeShift([9, 10, 11, 12, 13]);
+    expect(technician.shift.map((hour) => hour.value)).toEqual([
+      9, 10, 11, 12, 13,
+    ]);
+    expect(technician.shift.length).toBe(5);
+  });
+
+  it('should change the name of the technician', async () => {
+    const technician = await TechnicianEntity.create({
+      name: 'Diana White',
+      email: 'diana.white@example.com',
+      plainTextPassword: 'password123',
+      createdBy,
+    });
+
+    technician.changeName('Diana Black');
+    expect(technician.name).toBe('Diana Black');
+  });
+
+  it('should change the email of the technician', async () => {
+    const technician = await TechnicianEntity.create({
+      name: 'Ethan Blue',
+      email: 'ethan.blue@example.com',
+      plainTextPassword: 'password123',
+      createdBy,
+    });
+
+    technician.changeEmail('ethan.new@example.com');
+    expect(technician.email.value).toBe('ethan.new@example.com');
+  });
 });

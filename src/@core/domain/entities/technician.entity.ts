@@ -103,6 +103,18 @@ export class TechnicianEntity extends UserEntity {
     return this._createdBy;
   }
 
+  changeShift(newShift: number[]): void {
+    this._shift = newShift.map((hour) => new Hour(hour));
+  }
+
+  changeName(newName: string): void {
+    this._name = newName;
+  }
+
+  changeEmail(newEmail: string): void {
+    this._email = new Email(newEmail);
+  }
+
   toString(): string {
     return `TechnicianEntity { id: ${this._id.toString()}, name: ${this._name}, email: ${this._email.toString()}, createdAt: ${this._createdAt.toISOString()}, updatedAt: ${this._updatedAt.toISOString()}, shift: [${this._shift
       .map((hour) => hour.toString())

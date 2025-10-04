@@ -111,4 +111,32 @@ describe('AdminEntity', () => {
     expect(technician.createdAt).toBeInstanceOf(Date);
     expect(technician.updatedAt).toBeInstanceOf(Date);
   });
+
+  it('should update a TechnicianEntity from AdminEntity', async () => {
+    const admin = await AdminEntity.create({
+      name: 'Frank',
+      email: 'frank@example.com',
+      plainTextPassword: 'pass123',
+    });
+    const technician = await admin.createTechnician({
+      name: 'Tech Two',
+      email: 'tech.two@example.com',
+      plainTextPassword: 'pass123',
+    });
+    admin.updateTechnician(technician, {
+      name: 'Tech Two Updated',
+      email: 'tech.two.updated@example.com',
+      shift: [9, 10, 11, 12, 13],
+    });
+    expect(technician).toBeInstanceOf(TechnicianEntity);
+    expect(technician.id).toBe(technician.id);
+    expect(technician.name).toBe('Tech Two Updated');
+    expect(technician.email.value).toBe('tech.two.updated@example.com');
+    expect(technician.shift.map((hour) => hour.value)).toEqual([
+      9, 10, 11, 12, 13,
+    ]);
+    expect(technician.createdBy.id.value).toBe(admin.id.value);
+    expect(technician.createdAt).toBe(technician.createdAt);
+    expect(technician.updatedAt).toBeInstanceOf(Date);
+  });
 });

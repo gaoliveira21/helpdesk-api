@@ -24,5 +24,9 @@ export class UpdateTechnician implements UpdateTechnicianUseCase {
     if (!technician) {
       throw new Error('Technician not found');
     }
+
+    admin.updateTechnician(technician, input);
+
+    await this.technicianRepository.save(technician);
   }
 }
