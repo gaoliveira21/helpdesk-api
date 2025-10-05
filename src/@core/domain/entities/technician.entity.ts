@@ -1,7 +1,7 @@
 import { Email, Uuid, PasswordHash, Hour } from '../value_objects';
 import { AdminEntity } from './admin.entity';
 
-import { UserEntity } from './user.abstract';
+import { UserEntity } from './user.entity';
 
 export type CreateTechnicianProps = {
   name: string;

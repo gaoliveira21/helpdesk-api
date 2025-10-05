@@ -2,7 +2,16 @@ import { Email, Uuid, PasswordHash } from '../value_objects';
 
 import { Entity } from './entity.abstract';
 
-export abstract class UserEntity extends Entity {
+export type RestoreUserProps = {
+  id: string;
+  name: string;
+  email: string;
+  passwordHash: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export class UserEntity extends Entity {
   protected _name: string;
   protected _email: Email;
   protected _passwordHash: PasswordHash;
@@ -23,6 +32,24 @@ export abstract class UserEntity extends Entity {
     this._passwordHash = passwordHash;
     this._createdAt = createdAt ?? new Date();
     this._updatedAt = updatedAt ?? new Date();
+  }
+
+  static restore({
+    id,
+    name,
+    email,
+    passwordHash,
+    createdAt,
+    updatedAt,
+  }: RestoreUserProps): UserEntity {
+    return new UserEntity(
+      new Uuid(id),
+      name,
+      new Email(email),
+      PasswordHash.fromHash(passwordHash),
+      createdAt,
+      updatedAt,
+    );
   }
 
   get name(): string {
