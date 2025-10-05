@@ -72,6 +72,22 @@ export class UserEntity extends Entity {
     return this._updatedAt;
   }
 
+  async doesPasswordMatch(plainTextPassword: string): Promise<boolean> {
+    return this._passwordHash.compare(plainTextPassword);
+  }
+
+  async changePassword(
+    currentPlainTextPassword: string,
+    newPlainTextPassword: string,
+  ) {
+    const isMatch = await this.doesPasswordMatch(currentPlainTextPassword);
+    if (!isMatch) {
+      throw new Error('Current password does not match.');
+    }
+    this._passwordHash = await PasswordHash.create(newPlainTextPassword);
+    this._updatedAt = new Date();
+  }
+
   toString(): string {
     return `${this.constructor.name} { id: ${this._id.toString()}, name: ${this._name}, email: ${this._email.toString()}, createdAt: ${this._createdAt.toISOString()}, updatedAt: ${this._updatedAt.toISOString()} }`;
   }

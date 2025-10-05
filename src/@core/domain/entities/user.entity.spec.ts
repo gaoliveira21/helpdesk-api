@@ -1,4 +1,4 @@
-import { Uuid } from '../value_objects';
+import { PasswordHash, Uuid } from '../value_objects';
 import { UserEntity } from './user.entity';
 
 describe('UserEntity', () => {
@@ -83,5 +83,61 @@ describe('UserEntity', () => {
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
     });
+  });
+
+  it('should verify password matching', async () => {
+    const passwordHash = await PasswordHash.create('hashedPassword456');
+    const user = UserEntity.restore({
+      id: new Uuid().value,
+      name: 'Eve',
+      email: 'eve@example.com',
+      passwordHash: passwordHash.value,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    const isMatch = await user.doesPasswordMatch('hashedPassword456');
+    const isNotMatch = await user.doesPasswordMatch('wrongPassword');
+
+    expect(isMatch).toBe(true);
+    expect(isNotMatch).toBe(false);
+  });
+
+  it('should throw error if current password does not match when changing password', async () => {
+    const passwordHash = await PasswordHash.create('hashedPassword456');
+    const user = UserEntity.restore({
+      id: new Uuid().value,
+      name: 'Eve',
+      email: 'eve@example.com',
+      passwordHash: passwordHash.value,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    await expect(
+      user.changePassword('wrongPassword', 'newPassword123'),
+    ).rejects.toThrow('Current password does not match.');
+  });
+
+  it('should change the password of the user', async () => {
+    const password = 'hashedPassword456';
+    const passwordHash = await PasswordHash.create(password);
+    const user = UserEntity.restore({
+      id: new Uuid().value,
+      name: 'Eve',
+      email: 'eve@example.com',
+      passwordHash: passwordHash.value,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    const previousUpdatedAt = user.updatedAt;
+    const previousPasswordHash = user.passwordHash.value;
+
+    const newPassword = 'newPassword123';
+    await user.changePassword(password, newPassword);
+
+    expect(user.passwordHash.value).not.toBe(previousPasswordHash);
+    expect(user.passwordHash.value).not.toBe(newPassword);
+    expect(user.updatedAt).not.toBe(previousUpdatedAt);
   });
 });
