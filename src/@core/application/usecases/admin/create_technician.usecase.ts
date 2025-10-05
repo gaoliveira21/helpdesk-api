@@ -2,12 +2,12 @@ import {
   CreateTechnicianInput,
   CreateTechnicianOutput,
   CreateTechnicianUseCase,
-} from 'src/@core/domain/usecases/create_technician.usecase';
+} from 'src/@core/domain/usecases/admin/create_technician.usecase';
 
-import { AdminRepository } from '../ports/admin_repository.port';
-import { PasswordGenerator } from '../ports/password_generator.port';
-import { TechnicianRepository } from '../ports/technician_repository.port';
-import { EmailSender } from '../ports/email_sender.port';
+import { AdminRepository } from 'src/@core/application/ports/admin_repository.port';
+import { PasswordGenerator } from 'src/@core/application/ports/password_generator.port';
+import { TechnicianRepository } from 'src/@core/application/ports/technician_repository.port';
+import { EmailSender } from 'src/@core/application/ports/email_sender.port';
 
 export class CreateTechnician implements CreateTechnicianUseCase {
   constructor(

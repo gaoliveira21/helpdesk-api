@@ -1,5 +1,5 @@
 import { CryptoPasswordGenerator } from 'src/@core/adapters/password_generator/crypto_password_generator';
-import { CreateTechnicianInput } from 'src/@core/domain/usecases/create_technician.usecase';
+import { CreateTechnicianInput } from 'src/@core/domain/usecases/admin/create_technician.usecase';
 import {
   InMemoryAdminRepository,
   InMemoryTechnicianRepository,

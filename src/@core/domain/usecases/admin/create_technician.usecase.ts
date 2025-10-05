@@ -1,4 +1,4 @@
-import { UseCase } from './usecase.interface';
+import { UseCase } from '../usecase.interface';
 
 export interface CreateTechnicianInput {
   name: string;

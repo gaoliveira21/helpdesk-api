@@ -2,7 +2,7 @@ import {
   InMemoryAdminRepository,
   InMemoryTechnicianRepository,
 } from 'src/@core/adapters/repositories/in_memory';
-import { UpdateTechnicianInput } from 'src/@core/domain/usecases/update_technician.usecase';
+import { UpdateTechnicianInput } from 'src/@core/domain/usecases/admin/update_technician.usecase';
 
 import { UpdateTechnician } from './update_technician.usecase';
 import { AdminEntity, TechnicianEntity } from 'src/@core/domain/entities';
