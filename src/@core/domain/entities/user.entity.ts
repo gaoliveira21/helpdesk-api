@@ -1,3 +1,4 @@
+import { UserRole } from '../enum/user_role.enum';
 import { Email, Uuid, PasswordHash } from '../value_objects';
 
 import { Entity } from './entity.abstract';
@@ -7,6 +8,7 @@ export type RestoreUserProps = {
   name: string;
   email: string;
   passwordHash: string;
+  role: UserRole;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -17,12 +19,14 @@ export class UserEntity extends Entity {
   protected _passwordHash: PasswordHash;
   protected _createdAt: Date;
   protected _updatedAt: Date;
+  protected _role: UserRole;
 
   protected constructor(
     id: Uuid,
     name: string,
     email: Email,
     passwordHash: PasswordHash,
+    role: UserRole,
     createdAt?: Date,
     updatedAt?: Date,
   ) {
@@ -30,6 +34,7 @@ export class UserEntity extends Entity {
     this._name = name;
     this._email = email;
     this._passwordHash = passwordHash;
+    this._role = role;
     this._createdAt = createdAt ?? new Date();
     this._updatedAt = updatedAt ?? new Date();
   }
@@ -39,6 +44,7 @@ export class UserEntity extends Entity {
     name,
     email,
     passwordHash,
+    role,
     createdAt,
     updatedAt,
   }: RestoreUserProps): UserEntity {
@@ -47,6 +53,7 @@ export class UserEntity extends Entity {
       name,
       new Email(email),
       PasswordHash.fromHash(passwordHash),
+      role,
       createdAt,
       updatedAt,
     );
@@ -62,6 +69,10 @@ export class UserEntity extends Entity {
 
   get passwordHash(): PasswordHash {
     return this._passwordHash;
+  }
+
+  get role(): UserRole {
+    return this._role;
   }
 
   get createdAt(): Date {

@@ -1,3 +1,4 @@
+import { UserRole } from '../enum/user_role.enum';
 import { Email, Uuid, PasswordHash } from '../value_objects';
 import { CreateTechnicianProps, TechnicianEntity } from './technician.entity';
 
@@ -33,7 +34,7 @@ export class AdminEntity extends UserEntity {
     createdAt?: Date,
     updatedAt?: Date,
   ) {
-    super(id, name, email, passwordHash, createdAt, updatedAt);
+    super(id, name, email, passwordHash, UserRole.ADMIN, createdAt, updatedAt);
   }
 
   static async create({

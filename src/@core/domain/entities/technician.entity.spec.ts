@@ -1,3 +1,4 @@
+import { UserRole } from '../enum/user_role.enum';
 import { Hour, Uuid } from '../value_objects';
 import { AdminEntity } from './admin.entity';
 
@@ -59,11 +60,20 @@ describe('TechnicianEntity', () => {
       createdBy,
       createdAt,
       updatedAt,
+      role: UserRole.TECHNICIAN,
     });
 
     expect(technician).toBeInstanceOf(TechnicianEntity);
     expect(technician.shift).toEqual(shift.map((hour) => new Hour(hour)));
     expect(technician.shift.length).toBe(shift.length);
+    expect(technician.id.value).toBe(id);
+    expect(technician.name).toBe(name);
+    expect(technician.email.value).toBe(email);
+    expect(technician.passwordHash.value).toBe(passwordHash);
+    expect(technician.createdAt).toBe(createdAt);
+    expect(technician.updatedAt).toBe(updatedAt);
+    expect(technician.createdBy).toBe(createdBy);
+    expect(technician.role).toBe(UserRole.TECHNICIAN);
   });
 
   it('should have a proper string representation', async () => {
