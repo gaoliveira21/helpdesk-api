@@ -91,8 +91,8 @@ export class UserEntity extends Entity {
     currentPlainTextPassword: string,
     newPlainTextPassword: string,
   ) {
-    const isMatch = await this.doesPasswordMatch(currentPlainTextPassword);
-    if (!isMatch) {
+    const match = await this.doesPasswordMatch(currentPlainTextPassword);
+    if (!match) {
       throw new Error('Current password does not match.');
     }
     this._passwordHash = await PasswordHash.create(newPlainTextPassword);

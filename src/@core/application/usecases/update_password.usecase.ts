@@ -13,5 +13,8 @@ export class UpdatePassword implements UpdatePasswordUseCase {
     if (!user) {
       throw new Error('User not found');
     }
+
+    await user.changePassword(input.currentPassword, input.newPassword);
+    await this.userRepository.save(user);
   }
 }
