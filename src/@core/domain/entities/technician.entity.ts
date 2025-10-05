@@ -105,14 +105,17 @@ export class TechnicianEntity extends UserEntity {
 
   changeShift(newShift: number[]): void {
     this._shift = newShift.map((hour) => new Hour(hour));
+    this._updatedAt = new Date();
   }
 
   changeName(newName: string): void {
     this._name = newName;
+    this._updatedAt = new Date();
   }
 
   changeEmail(newEmail: string): void {
     this._email = new Email(newEmail);
+    this._updatedAt = new Date();
   }
 
   toString(): string {

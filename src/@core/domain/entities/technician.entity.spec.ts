@@ -91,12 +91,14 @@ describe('TechnicianEntity', () => {
       plainTextPassword: 'password123',
       createdBy,
     });
+    const previousUpdatedAt = technician.updatedAt;
 
     technician.changeShift([9, 10, 11, 12, 13]);
     expect(technician.shift.map((hour) => hour.value)).toEqual([
       9, 10, 11, 12, 13,
     ]);
     expect(technician.shift.length).toBe(5);
+    expect(technician.updatedAt).not.toBe(previousUpdatedAt);
   });
 
   it('should change the name of the technician', async () => {
@@ -106,9 +108,11 @@ describe('TechnicianEntity', () => {
       plainTextPassword: 'password123',
       createdBy,
     });
+    const previousUpdatedAt = technician.updatedAt;
 
     technician.changeName('Diana Black');
     expect(technician.name).toBe('Diana Black');
+    expect(technician.updatedAt).not.toBe(previousUpdatedAt);
   });
 
   it('should change the email of the technician', async () => {
@@ -118,8 +122,10 @@ describe('TechnicianEntity', () => {
       plainTextPassword: 'password123',
       createdBy,
     });
+    const previousUpdatedAt = technician.updatedAt;
 
     technician.changeEmail('ethan.new@example.com');
     expect(technician.email.value).toBe('ethan.new@example.com');
+    expect(technician.updatedAt).not.toBe(previousUpdatedAt);
   });
 });
