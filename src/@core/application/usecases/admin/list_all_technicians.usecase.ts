@@ -1,0 +1,42 @@
+import {
+  ListAllTechniciansInput,
+  ListAllTechniciansOutput,
+  ListAllTechniciansUseCase,
+} from 'src/@core/domain/usecases/admin/list_all_technicians.use.case';
+
+import { FindAllTechniciansQuery } from '../../ports/find_all_technicians_query.port';
+import { Hour } from 'src/@core/domain/value_objects';
+
+export class ListAllTechnicians implements ListAllTechniciansUseCase {
+  constructor(
+    private readonly findAllTechniciansQuery: FindAllTechniciansQuery,
+  ) {}
+
+  async execute(
+    input: ListAllTechniciansInput = {},
+  ): Promise<ListAllTechniciansOutput> {
+    const { page = 1, limit = 10 } = input;
+
+    const { count, technicians } = await this.findAllTechniciansQuery.findAll({
+      page,
+      limit,
+    });
+
+    return {
+      page,
+      totalPages: Math.ceil(count / limit),
+      total: count,
+      technicians: technicians.map((tech) => ({
+        id: tech.id,
+        name: tech.name,
+        email: tech.email,
+        shift: tech.shift.map((h) => ({
+          label: new Hour(h).toString(),
+          value: h,
+        })),
+        createdAt: tech.createdAt.toISOString(),
+        updatedAt: tech.updatedAt.toISOString(),
+      })),
+    };
+  }
+}
