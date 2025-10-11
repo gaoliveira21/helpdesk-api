@@ -1,5 +1,6 @@
 import { UserRole } from '../enum/user_role.enum';
 import { Email, Uuid, PasswordHash } from '../value_objects';
+import { ServiceEntity } from './service.entity';
 import { CreateTechnicianProps, TechnicianEntity } from './technician.entity';
 
 import { UserEntity } from './user.entity';
@@ -77,5 +78,9 @@ export class AdminEntity extends UserEntity {
     if (name) technician.changeName(name);
     if (email) technician.changeEmail(email);
     if (shift) technician.changeShift(shift);
+  }
+
+  createService(name: string, price: number) {
+    return ServiceEntity.create({ name, price, createdBy: this });
   }
 }

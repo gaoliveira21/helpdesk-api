@@ -1,11 +1,26 @@
 import { Uuid } from '../value_objects';
+import { AdminEntity } from './admin.entity';
 import { ServiceEntity } from './service.entity';
 
 describe('ServiceEntity', () => {
+  const createdAdmin = () => {
+    return AdminEntity.restore({
+      id: new Uuid().value,
+      name: 'Admin 1',
+      email: 'admin1@example.com',
+      passwordHash: 'admin123',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  };
+
   it('should create a service entity', () => {
+    const admin = createdAdmin();
+
     const service = ServiceEntity.create({
       name: 'Test Service',
       price: 100,
+      createdBy: admin,
     });
 
     expect(service).toBeInstanceOf(ServiceEntity);
@@ -13,11 +28,13 @@ describe('ServiceEntity', () => {
     expect(service.name).toBe('Test Service');
     expect(service.price).toBe(100);
     expect(service.isActive()).toBe(true);
+    expect(service.createdBy.isEqual(admin)).toBe(true);
     expect(service.createdAt).toBeInstanceOf(Date);
     expect(service.updatedAt).toBeInstanceOf(Date);
   });
 
   it('should restore a service entity', () => {
+    const admin = createdAdmin();
     const id = new Uuid();
     const now = new Date();
     const service = ServiceEntity.restore({
@@ -27,6 +44,7 @@ describe('ServiceEntity', () => {
       active: true,
       createdAt: now,
       updatedAt: now,
+      createdBy: admin,
     });
 
     expect(service).toBeInstanceOf(ServiceEntity);
@@ -36,24 +54,29 @@ describe('ServiceEntity', () => {
     expect(service.isActive()).toBe(true);
     expect(service.createdAt).toBe(now);
     expect(service.updatedAt).toBe(now);
+    expect(service.createdBy.isEqual(admin)).toBe(true);
   });
 
   it('should convert to string', () => {
+    const admin = createdAdmin();
     const service = ServiceEntity.create({
       name: 'String Service',
       price: 150,
+      createdBy: admin,
     });
 
     const str = service.toString();
     expect(str).toBe(
-      `ServiceEntity { id: ${service.id.value}, name: ${service.name}, price: ${service.price}, active: ${service.isActive()}, createdAt: ${service.createdAt.toISOString()}, updatedAt: ${service.updatedAt.toISOString()} }`,
+      `ServiceEntity { id: ${service.id.value}, name: ${service.name}, price: ${service.price}, active: ${service.isActive()}, createdAt: ${service.createdAt.toISOString()}, updatedAt: ${service.updatedAt.toISOString()}, createdBy: ${service.createdBy.toString()} }`,
     );
   });
 
   it('should convert to JSON', () => {
+    const admin = createdAdmin();
     const service = ServiceEntity.create({
       name: 'JSON Service',
       price: 250,
+      createdBy: admin,
     });
 
     const json = service.toJSON();
@@ -64,13 +87,16 @@ describe('ServiceEntity', () => {
       active: true,
       createdAt: service.createdAt.toISOString(),
       updatedAt: service.updatedAt.toISOString(),
+      createdBy: service.createdBy.toJSON(),
     });
   });
 
   it('should deactivate the service', () => {
+    const admin = createdAdmin();
     const service = ServiceEntity.create({
       name: 'Active Service',
       price: 300,
+      createdBy: admin,
     });
 
     expect(service.isActive()).toBe(true);
@@ -83,9 +109,11 @@ describe('ServiceEntity', () => {
   });
 
   it('should activate the service', () => {
+    const admin = createdAdmin();
     const service = ServiceEntity.create({
       name: 'Inactive Service',
       price: 350,
+      createdBy: admin,
     });
 
     service.deActivate();
@@ -99,10 +127,12 @@ describe('ServiceEntity', () => {
   });
 
   it('should throw an error if price is invalid', () => {
+    const admin = createdAdmin();
     expect(() =>
       ServiceEntity.create({
         name: 'Invalid Service',
         price: -100,
+        createdBy: admin,
       }),
     ).toThrow('Price must be greater than zero');
   });

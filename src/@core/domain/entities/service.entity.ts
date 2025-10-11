@@ -1,15 +1,18 @@
 import { Uuid } from '../value_objects';
+import { AdminEntity } from './admin.entity';
 import { Entity } from './entity.abstract';
 
 export type CreateServiceProps = {
   name: string;
   price: number;
+  createdBy: AdminEntity;
 };
 
 export type RestoreServiceProps = {
   id: string;
   name: string;
   price: number;
+  createdBy: AdminEntity;
   active: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -19,6 +22,7 @@ export class ServiceEntity extends Entity {
   private _name: string;
   private _price: number;
   private _active: boolean;
+  private _createdBy: AdminEntity;
   private _createdAt: Date;
   private _updatedAt: Date;
 
@@ -26,6 +30,7 @@ export class ServiceEntity extends Entity {
     id: Uuid,
     name: string,
     price: number,
+    createdBy: AdminEntity,
     active: boolean = true,
     createdAt?: Date,
     updatedAt?: Date,
@@ -38,18 +43,20 @@ export class ServiceEntity extends Entity {
     this._name = name;
     this._price = price;
     this._active = active;
+    this._createdBy = createdBy;
     this._createdAt = createdAt ?? new Date();
     this._updatedAt = updatedAt ?? new Date();
   }
 
-  static create({ name, price }: CreateServiceProps): ServiceEntity {
-    return new ServiceEntity(new Uuid(), name, price);
+  static create({ name, price, createdBy }: CreateServiceProps): ServiceEntity {
+    return new ServiceEntity(new Uuid(), name, price, createdBy);
   }
 
   static restore({
     id,
     name,
     price,
+    createdBy,
     active,
     createdAt,
     updatedAt,
@@ -58,6 +65,7 @@ export class ServiceEntity extends Entity {
       new Uuid(id),
       name,
       price,
+      createdBy,
       active,
       createdAt,
       updatedAt,
@@ -80,6 +88,10 @@ export class ServiceEntity extends Entity {
     return this._updatedAt;
   }
 
+  get createdBy(): AdminEntity {
+    return this._createdBy;
+  }
+
   isActive(): boolean {
     return this._active;
   }
@@ -95,7 +107,7 @@ export class ServiceEntity extends Entity {
   }
 
   toString(): string {
-    return `ServiceEntity { id: ${this.id.value}, name: ${this.name}, price: ${this.price}, active: ${this.isActive()}, createdAt: ${this.createdAt.toISOString()}, updatedAt: ${this.updatedAt.toISOString()} }`;
+    return `ServiceEntity { id: ${this.id.value}, name: ${this.name}, price: ${this.price}, active: ${this.isActive()}, createdAt: ${this.createdAt.toISOString()}, updatedAt: ${this.updatedAt.toISOString()}, createdBy: ${this.createdBy.toString()} }`;
   }
 
   toJSON() {
@@ -106,6 +118,7 @@ export class ServiceEntity extends Entity {
       active: this.isActive(),
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
+      createdBy: this.createdBy.toJSON(),
     };
   }
 }

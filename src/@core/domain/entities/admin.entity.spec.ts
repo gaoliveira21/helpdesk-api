@@ -1,5 +1,6 @@
 import { Uuid } from '../value_objects/uuid.vo';
 import { AdminEntity } from './admin.entity';
+import { ServiceEntity } from './service.entity';
 import { TechnicianEntity } from './technician.entity';
 
 describe('AdminEntity', () => {
@@ -138,5 +139,22 @@ describe('AdminEntity', () => {
     expect(technician.createdBy.id.value).toBe(admin.id.value);
     expect(technician.createdAt).toBe(technician.createdAt);
     expect(technician.updatedAt).toBeInstanceOf(Date);
+  });
+
+  it('should create a ServiceEntity from AdminEntity', async () => {
+    const admin = await AdminEntity.create({
+      name: 'Grace',
+      email: 'grace@example.com',
+      plainTextPassword: 'pass123',
+    });
+    const service = admin.createService('Service One', 100);
+    expect(service).toBeInstanceOf(ServiceEntity);
+    expect(service.id).toBeDefined();
+    expect(service.name).toBe('Service One');
+    expect(service.price).toBe(100);
+    expect(service.createdAt).toBeInstanceOf(Date);
+    expect(service.updatedAt).toBeInstanceOf(Date);
+    expect(service.isActive()).toBe(true);
+    expect(service.createdBy.isEqual(admin)).toBe(true);
   });
 });
