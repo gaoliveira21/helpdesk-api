@@ -11,4 +11,8 @@ export class InMemoryCustomerRepository implements CustomerRepository {
   async save(customer: CustomerEntity): Promise<void> {
     this.customers.set(customer.id.toString(), customer);
   }
+
+  async delete(id: string): Promise<void> {
+    this.customers.delete(id);
+  }
 }
