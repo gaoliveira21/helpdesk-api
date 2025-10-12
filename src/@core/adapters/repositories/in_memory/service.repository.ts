@@ -1,4 +1,4 @@
-import { ServiceRepository } from 'src/@core/application/ports/service_repository.port';
+import { ServiceRepository } from 'src/@core/application/ports/repositories/service_repository.port';
 import { ServiceEntity } from 'src/@core/domain/entities';
 
 export class InMemoryServiceRepository implements ServiceRepository {

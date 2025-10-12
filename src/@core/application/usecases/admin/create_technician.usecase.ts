@@ -4,9 +4,9 @@ import {
   CreateTechnicianUseCase,
 } from 'src/@core/domain/usecases/admin/create_technician.usecase';
 
-import { AdminRepository } from 'src/@core/application/ports/admin_repository.port';
+import { AdminRepository } from 'src/@core/application/ports/repositories/admin_repository.port';
 import { PasswordGenerator } from 'src/@core/application/ports/password_generator.port';
-import { TechnicianRepository } from 'src/@core/application/ports/technician_repository.port';
+import { TechnicianRepository } from 'src/@core/application/ports/repositories/technician_repository.port';
 import { EmailSender } from 'src/@core/application/ports/email_sender.port';
 
 export class CreateTechnician implements CreateTechnicianUseCase {

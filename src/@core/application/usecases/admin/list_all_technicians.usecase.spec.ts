@@ -1,7 +1,7 @@
 import {
   FindAllTechniciansQuery,
   TechniciansFound,
-} from '../../ports/find_all_technicians_query.port';
+} from '../../ports/queries/find_all_technicians_query.port';
 import { ListAllTechnicians } from './list_all_technicians.usecase';
 
 describe('ListAllTechniciansUseCase', () => {

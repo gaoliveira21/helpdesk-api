@@ -1,4 +1,4 @@
-import { UserRepository } from 'src/@core/application/ports/user_repository.port';
+import { UserRepository } from 'src/@core/application/ports/repositories/user_repository.port';
 import { UserEntity } from 'src/@core/domain/entities/user.entity';
 
 export class InMemoryUserRepository implements UserRepository {

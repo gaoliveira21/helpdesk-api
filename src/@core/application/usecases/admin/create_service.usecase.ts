@@ -4,8 +4,8 @@ import {
   CreateServiceUseCase,
 } from 'src/@core/domain/usecases/admin/create_service.usecase';
 
-import { AdminRepository } from '../../ports/admin_repository.port';
-import { ServiceRepository } from '../../ports/service_repository.port';
+import { AdminRepository } from '../../ports/repositories/admin_repository.port';
+import { ServiceRepository } from '../../ports/repositories/service_repository.port';
 
 export class CreateService implements CreateServiceUseCase {
   constructor(

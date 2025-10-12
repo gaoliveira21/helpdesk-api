@@ -3,7 +3,7 @@ import {
   UpdatePasswordUseCase,
 } from 'src/@core/domain/usecases/update_password.usecase';
 
-import { UserRepository } from '../ports/user_repository.port';
+import { UserRepository } from '../ports/repositories/user_repository.port';
 
 export class UpdatePassword implements UpdatePasswordUseCase {
   constructor(private readonly userRepository: UserRepository) {}

@@ -3,8 +3,8 @@ import {
   UpdateTechnicianUseCase,
 } from 'src/@core/domain/usecases/admin/update_technician.usecase';
 
-import { AdminRepository } from 'src/@core/application/ports/admin_repository.port';
-import { TechnicianRepository } from 'src/@core/application/ports/technician_repository.port';
+import { AdminRepository } from 'src/@core/application/ports/repositories/admin_repository.port';
+import { TechnicianRepository } from 'src/@core/application/ports/repositories/technician_repository.port';
 
 export class UpdateTechnician implements UpdateTechnicianUseCase {
   constructor(

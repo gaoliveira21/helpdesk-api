@@ -4,7 +4,7 @@ import {
   ListAllTechniciansUseCase,
 } from 'src/@core/domain/usecases/admin/list_all_technicians.use.case';
 
-import { FindAllTechniciansQuery } from '../../ports/find_all_technicians_query.port';
+import { FindAllTechniciansQuery } from '../../ports/queries/find_all_technicians_query.port';
 import { Hour } from 'src/@core/domain/value_objects';
 
 export class ListAllTechnicians implements ListAllTechniciansUseCase {
