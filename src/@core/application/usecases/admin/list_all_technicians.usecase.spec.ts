@@ -25,7 +25,8 @@ describe('ListAllTechniciansUseCase', () => {
 
     const result = await useCase.execute({});
 
-    expect(result).toEqual({
+    expect(result.error).toBeNull();
+    expect(result.data).toEqual({
       page: 1,
       totalPages: 0,
       total: 0,
@@ -61,7 +62,8 @@ describe('ListAllTechniciansUseCase', () => {
 
     const result = await useCase.execute({});
 
-    expect(result).toEqual({
+    expect(result.error).toBeNull();
+    expect(result.data).toEqual({
       page: 1,
       totalPages: 1,
       total: 2,
@@ -106,17 +108,20 @@ describe('ListAllTechniciansUseCase', () => {
     const resultPage2 = await useCase.execute({ page: 2, limit: 10 });
     const resultPage3 = await useCase.execute({ page: 3, limit: 10 });
 
-    expect(resultPage1.page).toBe(1);
-    expect(resultPage1.totalPages).toBe(3);
-    expect(resultPage1.total).toBe(25);
+    expect(resultPage1.error).toBeNull();
+    expect(resultPage1.data!.page).toBe(1);
+    expect(resultPage1.data!.totalPages).toBe(3);
+    expect(resultPage1.data!.total).toBe(25);
 
-    expect(resultPage2.page).toBe(2);
-    expect(resultPage2.totalPages).toBe(3);
-    expect(resultPage2.total).toBe(25);
+    expect(resultPage2.error).toBeNull();
+    expect(resultPage2.data!.page).toBe(2);
+    expect(resultPage2.data!.totalPages).toBe(3);
+    expect(resultPage2.data!.total).toBe(25);
 
-    expect(resultPage3.page).toBe(3);
-    expect(resultPage3.totalPages).toBe(3);
-    expect(resultPage3.total).toBe(25);
+    expect(resultPage3.error).toBeNull();
+    expect(resultPage3.data!.page).toBe(3);
+    expect(resultPage3.data!.totalPages).toBe(3);
+    expect(resultPage3.data!.total).toBe(25);
   });
 
   it('should propagate errors from the query', async () => {

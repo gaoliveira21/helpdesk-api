@@ -3,6 +3,7 @@ import {
   ListAllTechniciansOutput,
   ListAllTechniciansUseCase,
 } from 'src/@core/domain/usecases/admin/list_all_technicians.use.case';
+import { Result } from 'src/@core/domain/usecases/usecase.interface';
 
 import { FindAllTechniciansQuery } from '../../ports/queries/find_all_technicians_query.port';
 import { Hour } from 'src/@core/domain/value_objects';
@@ -14,7 +15,7 @@ export class ListAllTechnicians implements ListAllTechniciansUseCase {
 
   async execute(
     input: ListAllTechniciansInput = {},
-  ): Promise<ListAllTechniciansOutput> {
+  ): Promise<Result<ListAllTechniciansOutput>> {
     const { page = 1, limit = 10 } = input;
 
     const { count, technicians } = await this.findAllTechniciansQuery.findAll({
@@ -23,20 +24,23 @@ export class ListAllTechnicians implements ListAllTechniciansUseCase {
     });
 
     return {
-      page,
-      totalPages: Math.ceil(count / limit),
-      total: count,
-      technicians: technicians.map((tech) => ({
-        id: tech.id,
-        name: tech.name,
-        email: tech.email,
-        shift: tech.shift.map((h) => ({
-          label: new Hour(h).toString(),
-          value: h,
+      data: {
+        page,
+        totalPages: Math.ceil(count / limit),
+        total: count,
+        technicians: technicians.map((tech) => ({
+          id: tech.id,
+          name: tech.name,
+          email: tech.email,
+          shift: tech.shift.map((h) => ({
+            label: new Hour(h).toString(),
+            value: h,
+          })),
+          createdAt: tech.createdAt.toISOString(),
+          updatedAt: tech.updatedAt.toISOString(),
         })),
-        createdAt: tech.createdAt.toISOString(),
-        updatedAt: tech.updatedAt.toISOString(),
-      })),
+      },
+      error: null,
     };
   }
 }

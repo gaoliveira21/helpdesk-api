@@ -7,4 +7,4 @@ export interface UpdatePasswordInput {
 }
 
 export interface UpdatePasswordUseCase
-  extends UseCase<UpdatePasswordInput, void> {}
+  extends UseCase<UpdatePasswordInput, undefined> {}

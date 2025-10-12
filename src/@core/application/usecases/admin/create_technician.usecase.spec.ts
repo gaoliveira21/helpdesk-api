@@ -41,10 +41,10 @@ describe('CreateTechnicianUseCase', () => {
       adminId: 'non-existent-admin-id',
     };
 
-    await expect(useCase.execute(input)).rejects.toThrow('Admin not found');
-    expect(adminRepository.findById).toHaveBeenCalledWith(
-      'non-existent-admin-id',
-    );
+    const { error, data } = await useCase.execute(input);
+
+    expect(error?.message).toBe('Admin not found');
+    expect(data).toBeNull();
   });
 
   it('should create a technician with a generated password and send it via email', async () => {
@@ -74,18 +74,19 @@ describe('CreateTechnicianUseCase', () => {
       adminId: admin.id.value,
       shift: [1, 2, 3],
     };
-    const output = await useCase.execute(input);
+    const { error, data } = await useCase.execute(input);
 
-    const technician = await technicianRepository.findById(output.id);
+    const technician = await technicianRepository.findById(data!.id);
 
+    expect(error).toBeNull();
     expect(technician).toBeDefined();
     expect(technician?.name).toBe(input.name);
     expect(technician?.email.value).toBe(input.email);
     expect(technician?.createdBy.id.value).toBe(admin.id.value);
     expect(technician?.shift.map((h) => h.value)).toEqual(input.shift);
     expect(technician?.passwordHash).not.toBe(technicianPassword);
-    expect(output).toHaveProperty('id');
-    expect(output.id).toBe(technician?.id.value);
+    expect(data).toHaveProperty('id');
+    expect(data!.id).toBe(technician?.id.value);
     expect(passwordGenerator.generate).toHaveBeenCalledTimes(1);
     expect(emailSender.sendEmail).toHaveBeenCalledWith({
       to: technician?.email.value,

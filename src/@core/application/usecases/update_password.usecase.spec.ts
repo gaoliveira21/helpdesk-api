@@ -16,13 +16,13 @@ describe('UpdatePasswordUseCase', () => {
   it('should throw an error if user is not found', async () => {
     const { useCase } = createUseCase();
 
-    await expect(
-      useCase.execute({
-        userId: 'non-existent-user-id',
-        currentPassword: 'currentPassword123',
-        newPassword: 'newPassword123',
-      }),
-    ).rejects.toThrow('User not found');
+    const { error } = await useCase.execute({
+      userId: 'non-existent-user-id',
+      currentPassword: 'currentPassword123',
+      newPassword: 'newPassword123',
+    });
+
+    expect(error?.message).toBe('User not found');
   });
 
   it('should update the password successfully', async () => {

@@ -3,6 +3,7 @@ import {
   CreateTechnicianOutput,
   CreateTechnicianUseCase,
 } from 'src/@core/domain/usecases/admin/create_technician.usecase';
+import { Result } from 'src/@core/domain/usecases/usecase.interface';
 
 import { AdminRepository } from 'src/@core/application/ports/repositories/admin_repository.port';
 import { PasswordGenerator } from 'src/@core/application/ports/password_generator.port';
@@ -17,10 +18,12 @@ export class CreateTechnician implements CreateTechnicianUseCase {
     private readonly emailSender: EmailSender,
   ) {}
 
-  async execute(input: CreateTechnicianInput): Promise<CreateTechnicianOutput> {
+  async execute(
+    input: CreateTechnicianInput,
+  ): Promise<Result<CreateTechnicianOutput>> {
     const admin = await this.adminRepository.findById(input.adminId);
     if (!admin) {
-      throw new Error('Admin not found');
+      return { error: new Error('Admin not found'), data: null };
     }
 
     const password = this.passwordGenerator.generate();
@@ -41,7 +44,8 @@ export class CreateTechnician implements CreateTechnicianUseCase {
     });
 
     return {
-      id: technician.id.value,
+      data: { id: technician.id.value },
+      error: null,
     };
   }
 }

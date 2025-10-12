@@ -16,13 +16,14 @@ describe('CreateServiceUseCase', () => {
   it('should throw an error if admin is not found', async () => {
     const { useCase } = createUseCase();
 
-    await expect(
-      useCase.execute({
-        adminId: 'non-existent-admin-id',
-        name: 'Service 1',
-        price: 100,
-      }),
-    ).rejects.toThrow('Admin not found');
+    const { error, data } = await useCase.execute({
+      adminId: 'non-existent-admin-id',
+      name: 'Service 1',
+      price: 100,
+    });
+
+    expect(error?.message).toBe('Admin not found');
+    expect(data).toBeNull();
   });
 
   it('should create a service', async () => {
@@ -35,20 +36,21 @@ describe('CreateServiceUseCase', () => {
     });
     await adminRepository.save(admin);
 
-    const output = await useCase.execute({
+    const { error, data } = await useCase.execute({
       adminId: admin.id.value,
       name: 'Service 1',
       price: 100,
     });
 
-    const service = await serviceRepository.findById(output.id);
+    const service = await serviceRepository.findById(data!.id);
 
+    expect(error).toBeNull();
     expect(service).toBeDefined();
     expect(service?.name).toBe('Service 1');
     expect(service?.price.value).toBe(100);
     expect(service?.createdBy.isEqual(admin)).toBe(true);
-    expect(output).toBeDefined();
-    expect(output.id).toBeDefined();
-    expect(output.id).toBe(service?.id.value);
+    expect(data).toBeDefined();
+    expect(data!.id).toBeDefined();
+    expect(data!.id).toBe(service?.id.value);
   });
 });

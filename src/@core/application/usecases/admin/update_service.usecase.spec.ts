@@ -26,7 +26,9 @@ describe('UpdateServiceUseCase', () => {
       isActive: true,
     };
 
-    await expect(useCase.execute(input)).rejects.toThrow('Admin not found');
+    const { error } = await useCase.execute(input);
+
+    expect(error?.message).toBe('Admin not found');
   });
 
   it('should throw an error if service does not exist', async () => {
@@ -47,7 +49,9 @@ describe('UpdateServiceUseCase', () => {
       isActive: true,
     };
 
-    await expect(useCase.execute(input)).rejects.toThrow('Service not found');
+    const { error } = await useCase.execute(input);
+
+    expect(error?.message).toBe('Service not found');
   });
 
   it('should update the service successfully', async () => {

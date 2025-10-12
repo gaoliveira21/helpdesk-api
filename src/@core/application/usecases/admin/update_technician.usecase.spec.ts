@@ -28,7 +28,9 @@ describe('UpdateTechnicianUseCase', () => {
       name: 'New Name',
     };
 
-    await expect(useCase.execute(input)).rejects.toThrow('Admin not found');
+    const { error } = await useCase.execute(input);
+
+    expect(error?.message).toBe('Admin not found');
   });
 
   it('should throw an error if technician is not found', async () => {
@@ -46,9 +48,9 @@ describe('UpdateTechnicianUseCase', () => {
       name: 'New Name',
     };
 
-    await expect(useCase.execute(input)).rejects.toThrow(
-      'Technician not found',
-    );
+    const { error } = await useCase.execute(input);
+
+    expect(error?.message).toBe('Technician not found');
   });
 
   it('should update technician successfully', async () => {
