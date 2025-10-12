@@ -1,15 +1,12 @@
-import { UseCase } from '../usecase.interface';
+import { Paginated, UseCase } from '../usecase.interface';
 
 export interface ListAllTechniciansInput {
   page?: number;
   limit?: number;
 }
 
-export interface ListAllTechniciansOutput {
-  page: number;
-  totalPages: number;
-  total: number;
-  technicians: Array<{
+export interface ListAllTechniciansOutput
+  extends Paginated<{
     id: string;
     name: string;
     email: string;
@@ -19,8 +16,7 @@ export interface ListAllTechniciansOutput {
     }>;
     createdAt: string;
     updatedAt: string;
-  }>;
-}
+  }> {}
 
 export interface ListAllTechniciansUseCase
   extends UseCase<ListAllTechniciansInput, ListAllTechniciansOutput> {}

@@ -25,10 +25,10 @@ export class ListAllTechnicians implements ListAllTechniciansUseCase {
 
     return {
       data: {
-        page,
+        currentPage: page,
         totalPages: Math.ceil(count / limit),
-        total: count,
-        technicians: technicians.map((tech) => ({
+        totalItems: count,
+        items: technicians.map((tech) => ({
           id: tech.id,
           name: tech.name,
           email: tech.email,

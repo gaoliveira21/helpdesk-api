@@ -5,6 +5,13 @@ export type Success<T> = T extends void
 
 export type Result<T> = Failure | Success<T>;
 
+export type Paginated<T> = {
+  items: T[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+};
+
 export interface UseCase<Input, Output> {
   execute(input: Input): Promise<Result<Output>> | Result<Output>;
 }
