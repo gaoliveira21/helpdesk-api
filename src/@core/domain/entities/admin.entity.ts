@@ -26,6 +26,12 @@ export type UpdateTechnicianProps = {
   shift?: number[];
 };
 
+export type UpdateServiceProps = {
+  name?: string;
+  price?: number;
+  isActive?: boolean;
+};
+
 export class AdminEntity extends UserEntity {
   private constructor(
     id: Uuid,
@@ -82,5 +88,20 @@ export class AdminEntity extends UserEntity {
 
   createService(name: string, price: number) {
     return ServiceEntity.create({ name, price, createdBy: this });
+  }
+
+  updateService(
+    service: ServiceEntity,
+    { name, price, isActive }: UpdateServiceProps,
+  ) {
+    if (name) service.changeName(name);
+    if (price !== undefined) service.changePrice(price);
+    if (isActive !== undefined) {
+      if (isActive) {
+        service.activate();
+      } else {
+        service.deactivate();
+      }
+    }
   }
 }

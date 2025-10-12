@@ -151,10 +151,34 @@ describe('AdminEntity', () => {
     expect(service).toBeInstanceOf(ServiceEntity);
     expect(service.id).toBeDefined();
     expect(service.name).toBe('Service One');
-    expect(service.price).toBe(100);
+    expect(service.price.value).toBe(100);
     expect(service.createdAt).toBeInstanceOf(Date);
     expect(service.updatedAt).toBeInstanceOf(Date);
     expect(service.isActive()).toBe(true);
     expect(service.createdBy.isEqual(admin)).toBe(true);
+  });
+
+  it('should update a ServiceEntity from AdminEntity', async () => {
+    const admin = await AdminEntity.create({
+      name: 'Hank',
+      email: 'hank@example.com',
+      plainTextPassword: 'pass123',
+    });
+    const service = admin.createService('Service One', 100);
+    admin.updateService(service, {
+      name: 'Service One Updated',
+      price: 150,
+    });
+    expect(service).toBeInstanceOf(ServiceEntity);
+    expect(service.id).toBe(service.id);
+    expect(service.name).toBe('Service One Updated');
+    expect(service.price.value).toBe(150);
+    expect(service.createdBy.id.value).toBe(admin.id.value);
+    expect(service.createdAt).toBe(service.createdAt);
+    expect(service.updatedAt).toBeInstanceOf(Date);
+    expect(service.isActive()).toBe(true);
+
+    admin.updateService(service, { isActive: false });
+    expect(service.isActive()).toBe(false);
   });
 });
