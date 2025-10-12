@@ -26,7 +26,7 @@ describe('ServiceEntity', () => {
     expect(service).toBeInstanceOf(ServiceEntity);
     expect(service.id).toBeDefined();
     expect(service.name).toBe('Test Service');
-    expect(service.price).toBe(100);
+    expect(service.price.value).toBe(100);
     expect(service.isActive()).toBe(true);
     expect(service.createdBy.isEqual(admin)).toBe(true);
     expect(service.createdAt).toBeInstanceOf(Date);
@@ -50,7 +50,7 @@ describe('ServiceEntity', () => {
     expect(service).toBeInstanceOf(ServiceEntity);
     expect(service.id.value).toBe(id.value);
     expect(service.name).toBe('Restored Service');
-    expect(service.price).toBe(200);
+    expect(service.price.value).toBe(200);
     expect(service.isActive()).toBe(true);
     expect(service.createdAt).toBe(now);
     expect(service.updatedAt).toBe(now);
@@ -67,7 +67,7 @@ describe('ServiceEntity', () => {
 
     const str = service.toString();
     expect(str).toBe(
-      `ServiceEntity { id: ${service.id.value}, name: ${service.name}, price: ${service.price}, active: ${service.isActive()}, createdAt: ${service.createdAt.toISOString()}, updatedAt: ${service.updatedAt.toISOString()}, createdBy: ${service.createdBy.toString()} }`,
+      `ServiceEntity { id: ${service.id.value}, name: ${service.name}, price: ${service.price.toString()}, active: ${service.isActive()}, createdAt: ${service.createdAt.toISOString()}, updatedAt: ${service.updatedAt.toISOString()}, createdBy: ${service.createdBy.toString()} }`,
     );
   });
 
@@ -152,18 +152,7 @@ describe('ServiceEntity', () => {
     const beforeUpdate = service.updatedAt;
     service.changePrice(600);
 
-    expect(service.price).toBe(600);
+    expect(service.price.value).toBe(600);
     expect(service.updatedAt).not.toBe(beforeUpdate);
-  });
-
-  it('should throw an error if price is invalid', () => {
-    const admin = createdAdmin();
-    expect(() =>
-      ServiceEntity.create({
-        name: 'Invalid Service',
-        price: -100,
-        createdBy: admin,
-      }),
-    ).toThrow('Price must be greater than zero');
   });
 });

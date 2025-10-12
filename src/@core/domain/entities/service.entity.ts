@@ -1,4 +1,4 @@
-import { Uuid } from '../value_objects';
+import { Price, Uuid } from '../value_objects';
 import { AdminEntity } from './admin.entity';
 import { Entity } from './entity.abstract';
 
@@ -20,7 +20,7 @@ export type RestoreServiceProps = {
 
 export class ServiceEntity extends Entity {
   private _name: string;
-  private _price: number;
+  private _price: Price;
   private _active: boolean;
   private _createdBy: AdminEntity;
   private _createdAt: Date;
@@ -29,16 +29,12 @@ export class ServiceEntity extends Entity {
   private constructor(
     id: Uuid,
     name: string,
-    price: number,
+    price: Price,
     createdBy: AdminEntity,
     active: boolean = true,
     createdAt?: Date,
     updatedAt?: Date,
   ) {
-    if (price <= 0) {
-      throw new Error('Price must be greater than zero');
-    }
-
     super(id);
     this._name = name;
     this._price = price;
@@ -49,7 +45,7 @@ export class ServiceEntity extends Entity {
   }
 
   static create({ name, price, createdBy }: CreateServiceProps): ServiceEntity {
-    return new ServiceEntity(new Uuid(), name, price, createdBy);
+    return new ServiceEntity(new Uuid(), name, new Price(price), createdBy);
   }
 
   static restore({
@@ -64,7 +60,7 @@ export class ServiceEntity extends Entity {
     return new ServiceEntity(
       new Uuid(id),
       name,
-      price,
+      new Price(price),
       createdBy,
       active,
       createdAt,
@@ -76,7 +72,7 @@ export class ServiceEntity extends Entity {
     return this._name;
   }
 
-  get price(): number {
+  get price(): Price {
     return this._price;
   }
 
@@ -98,10 +94,7 @@ export class ServiceEntity extends Entity {
   }
 
   changePrice(price: number): void {
-    if (price <= 0) {
-      throw new Error('Price must be greater than zero');
-    }
-    this._price = price;
+    this._price = new Price(price);
     this._updatedAt = new Date();
   }
 
@@ -120,14 +113,14 @@ export class ServiceEntity extends Entity {
   }
 
   toString(): string {
-    return `ServiceEntity { id: ${this.id.value}, name: ${this.name}, price: ${this.price}, active: ${this.isActive()}, createdAt: ${this.createdAt.toISOString()}, updatedAt: ${this.updatedAt.toISOString()}, createdBy: ${this.createdBy.toString()} }`;
+    return `ServiceEntity { id: ${this.id.value}, name: ${this.name}, price: ${this.price.toString()}, active: ${this.isActive()}, createdAt: ${this.createdAt.toISOString()}, updatedAt: ${this.updatedAt.toISOString()}, createdBy: ${this.createdBy.toString()} }`;
   }
 
   toJSON() {
     return {
       id: this.id.value,
       name: this.name,
-      price: this.price,
+      price: this.price.value,
       active: this.isActive(),
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
