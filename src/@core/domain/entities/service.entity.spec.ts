@@ -102,7 +102,7 @@ describe('ServiceEntity', () => {
     expect(service.isActive()).toBe(true);
     const beforeUpdate = service.updatedAt;
 
-    service.deActivate();
+    service.deactivate();
 
     expect(service.isActive()).toBe(false);
     expect(service.updatedAt).not.toBe(beforeUpdate);
@@ -116,13 +116,43 @@ describe('ServiceEntity', () => {
       createdBy: admin,
     });
 
-    service.deActivate();
+    service.deactivate();
     expect(service.isActive()).toBe(false);
     const beforeUpdate = service.updatedAt;
 
     service.activate();
 
     expect(service.isActive()).toBe(true);
+    expect(service.updatedAt).not.toBe(beforeUpdate);
+  });
+
+  it('should change the name', () => {
+    const admin = createdAdmin();
+    const service = ServiceEntity.create({
+      name: 'Old Name Service',
+      price: 400,
+      createdBy: admin,
+    });
+
+    const beforeUpdate = service.updatedAt;
+    service.changeName('New Name Service');
+
+    expect(service.name).toBe('New Name Service');
+    expect(service.updatedAt).not.toBe(beforeUpdate);
+  });
+
+  it('should change the price', () => {
+    const admin = createdAdmin();
+    const service = ServiceEntity.create({
+      name: 'Pricey Service',
+      price: 500,
+      createdBy: admin,
+    });
+
+    const beforeUpdate = service.updatedAt;
+    service.changePrice(600);
+
+    expect(service.price).toBe(600);
     expect(service.updatedAt).not.toBe(beforeUpdate);
   });
 

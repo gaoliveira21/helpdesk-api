@@ -92,11 +92,24 @@ export class ServiceEntity extends Entity {
     return this._createdBy;
   }
 
+  changeName(name: string): void {
+    this._name = name;
+    this._updatedAt = new Date();
+  }
+
+  changePrice(price: number): void {
+    if (price <= 0) {
+      throw new Error('Price must be greater than zero');
+    }
+    this._price = price;
+    this._updatedAt = new Date();
+  }
+
   isActive(): boolean {
     return this._active;
   }
 
-  deActivate(): void {
+  deactivate(): void {
     this._active = false;
     this._updatedAt = new Date();
   }
