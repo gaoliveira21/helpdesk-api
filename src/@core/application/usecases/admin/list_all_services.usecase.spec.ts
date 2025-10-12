@@ -142,6 +142,10 @@ describe('ListAllServicesUseCase', () => {
     expect(resultPage1.data!.totalPages).toBe(3);
     expect(resultPage1.data!.totalItems).toBe(25);
     expect(resultPage1.data!.items).toHaveLength(10);
+    expect(findAllServicesQuery.findAll).toHaveBeenNthCalledWith(1, {
+      page: 1,
+      limit: 10,
+    });
     expect(resultPage1.data!.items[0]).toEqual({
       id: '1',
       name: 'Service 1',
@@ -156,6 +160,10 @@ describe('ListAllServicesUseCase', () => {
     expect(resultPage2.data!.totalPages).toBe(3);
     expect(resultPage2.data!.totalItems).toBe(25);
     expect(resultPage2.data!.items).toHaveLength(10);
+    expect(findAllServicesQuery.findAll).toHaveBeenNthCalledWith(2, {
+      page: 2,
+      limit: 10,
+    });
     expect(resultPage2.data!.items[0]).toEqual({
       id: '11',
       name: 'Service 11',
@@ -170,6 +178,10 @@ describe('ListAllServicesUseCase', () => {
     expect(resultPage3.data!.totalPages).toBe(3);
     expect(resultPage3.data!.totalItems).toBe(25);
     expect(resultPage3.data!.items).toHaveLength(5);
+    expect(findAllServicesQuery.findAll).toHaveBeenNthCalledWith(3, {
+      page: 3,
+      limit: 10,
+    });
     expect(resultPage3.data!.items[0]).toEqual({
       id: '21',
       name: 'Service 21',
