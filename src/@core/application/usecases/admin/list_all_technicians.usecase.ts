@@ -2,7 +2,7 @@ import {
   ListAllTechniciansInput,
   ListAllTechniciansOutput,
   ListAllTechniciansUseCase,
-} from 'src/@core/domain/usecases/admin/list_all_technicians.use.case';
+} from 'src/@core/domain/usecases/admin/list_all_technicians.usecase';
 import { Result } from 'src/@core/domain/usecases/usecase.interface';
 
 import { FindAllTechniciansQuery } from '../../ports/queries/find_all_technicians_query.port';
