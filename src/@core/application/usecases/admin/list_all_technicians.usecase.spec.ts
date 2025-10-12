@@ -62,6 +62,10 @@ describe('ListAllTechniciansUseCase', () => {
 
     const result = await useCase.execute({});
 
+    expect(findAllTechniciansQuery.findAll).toHaveBeenCalledWith({
+      page: 1,
+      limit: 10,
+    });
     expect(result.error).toBeNull();
     expect(result.data).toEqual({
       currentPage: 1,
@@ -112,16 +116,28 @@ describe('ListAllTechniciansUseCase', () => {
     expect(resultPage1.data!.currentPage).toBe(1);
     expect(resultPage1.data!.totalPages).toBe(3);
     expect(resultPage1.data!.totalItems).toBe(25);
+    expect(findAllTechniciansQuery.findAll).toHaveBeenNthCalledWith(1, {
+      page: 1,
+      limit: 10,
+    });
 
     expect(resultPage2.error).toBeNull();
     expect(resultPage2.data!.currentPage).toBe(2);
     expect(resultPage2.data!.totalPages).toBe(3);
     expect(resultPage2.data!.totalItems).toBe(25);
+    expect(findAllTechniciansQuery.findAll).toHaveBeenNthCalledWith(2, {
+      page: 2,
+      limit: 10,
+    });
 
     expect(resultPage3.error).toBeNull();
     expect(resultPage3.data!.currentPage).toBe(3);
     expect(resultPage3.data!.totalPages).toBe(3);
     expect(resultPage3.data!.totalItems).toBe(25);
+    expect(findAllTechniciansQuery.findAll).toHaveBeenNthCalledWith(3, {
+      page: 3,
+      limit: 10,
+    });
   });
 
   it('should propagate errors from the query', async () => {
