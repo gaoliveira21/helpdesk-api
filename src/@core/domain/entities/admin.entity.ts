@@ -1,5 +1,6 @@
 import { UserRole } from '../enum/user_role.enum';
 import { Email, Uuid, PasswordHash } from '../value_objects';
+import { CustomerEntity } from './customer.entity';
 import { ServiceEntity } from './service.entity';
 import { CreateTechnicianProps, TechnicianEntity } from './technician.entity';
 
@@ -30,6 +31,10 @@ export type UpdateServiceProps = {
   name?: string;
   price?: number;
   isActive?: boolean;
+};
+
+export type UpdateCustomerProps = {
+  name?: string;
 };
 
 export class AdminEntity extends UserEntity {
@@ -103,5 +108,9 @@ export class AdminEntity extends UserEntity {
         service.deactivate();
       }
     }
+  }
+
+  updateCustomer(customer: CustomerEntity, { name }: UpdateCustomerProps) {
+    if (name) customer.changeName(name);
   }
 }

@@ -1,5 +1,6 @@
 import { Uuid } from '../value_objects/uuid.vo';
 import { AdminEntity } from './admin.entity';
+import { CustomerEntity } from './customer.entity';
 import { ServiceEntity } from './service.entity';
 import { TechnicianEntity } from './technician.entity';
 
@@ -180,5 +181,29 @@ describe('AdminEntity', () => {
 
     admin.updateService(service, { isActive: false });
     expect(service.isActive()).toBe(false);
+  });
+
+  it('should update a CustomerEntity from AdminEntity', async () => {
+    const admin = await AdminEntity.create({
+      name: 'Ivy',
+      email: 'ivy@example.com',
+      plainTextPassword: 'pass123',
+    });
+    const customer = await CustomerEntity.create({
+      name: 'Customer One',
+      email: 'customer.one@example.com',
+      plainTextPassword: 'pass123',
+    });
+    admin.updateCustomer(customer, {
+      name: 'Customer One Updated',
+    });
+    expect(customer).toBeInstanceOf(CustomerEntity);
+    expect(customer.id).toBe(customer.id);
+    expect(customer.name).toBe('Customer One Updated');
+    expect(customer.email.value).toBe('customer.one@example.com');
+    expect(customer.passwordHash).toBeDefined();
+    expect(customer.passwordHash).not.toBe('pass123');
+    expect(customer.createdAt).toBeInstanceOf(Date);
+    expect(customer.updatedAt).toBeInstanceOf(Date);
   });
 });
