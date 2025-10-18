@@ -92,7 +92,7 @@ export class AdminEntity extends UserEntity {
   }
 
   createService(name: string, price: number) {
-    return ServiceEntity.create({ name, price, createdBy: this });
+    return ServiceEntity.create({ name, price, adminId: this.id.value });
   }
 
   updateService(

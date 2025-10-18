@@ -156,7 +156,7 @@ describe('AdminEntity', () => {
     expect(service.createdAt).toBeInstanceOf(Date);
     expect(service.updatedAt).toBeInstanceOf(Date);
     expect(service.isActive()).toBe(true);
-    expect(service.createdBy.isEqual(admin)).toBe(true);
+    expect(service.adminId.isEqual(admin.id)).toBe(true);
   });
 
   it('should update a ServiceEntity from AdminEntity', async () => {
@@ -174,7 +174,7 @@ describe('AdminEntity', () => {
     expect(service.id).toBe(service.id);
     expect(service.name).toBe('Service One Updated');
     expect(service.price.value).toBe(150);
-    expect(service.createdBy.id.value).toBe(admin.id.value);
+    expect(service.adminId.value).toBe(admin.id.value);
     expect(service.createdAt).toBe(service.createdAt);
     expect(service.updatedAt).toBeInstanceOf(Date);
     expect(service.isActive()).toBe(true);

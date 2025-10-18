@@ -1,18 +1,17 @@
 import { Price, Uuid } from '../value_objects';
-import { AdminEntity } from './admin.entity';
 import { Entity } from './entity.abstract';
 
 export type CreateServiceProps = {
   name: string;
   price: number;
-  createdBy: AdminEntity;
+  adminId: string;
 };
 
 export type RestoreServiceProps = {
   id: string;
   name: string;
   price: number;
-  createdBy: AdminEntity;
+  adminId: string;
   active: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -22,7 +21,7 @@ export class ServiceEntity extends Entity {
   private _name: string;
   private _price: Price;
   private _active: boolean;
-  private _createdBy: AdminEntity;
+  private _adminId: Uuid;
   private _createdAt: Date;
   private _updatedAt: Date;
 
@@ -30,7 +29,7 @@ export class ServiceEntity extends Entity {
     id: Uuid,
     name: string,
     price: Price,
-    createdBy: AdminEntity,
+    adminId: Uuid,
     active: boolean = true,
     createdAt?: Date,
     updatedAt?: Date,
@@ -39,20 +38,25 @@ export class ServiceEntity extends Entity {
     this._name = name;
     this._price = price;
     this._active = active;
-    this._createdBy = createdBy;
+    this._adminId = adminId;
     this._createdAt = createdAt ?? new Date();
     this._updatedAt = updatedAt ?? new Date();
   }
 
-  static create({ name, price, createdBy }: CreateServiceProps): ServiceEntity {
-    return new ServiceEntity(new Uuid(), name, new Price(price), createdBy);
+  static create({ name, price, adminId }: CreateServiceProps): ServiceEntity {
+    return new ServiceEntity(
+      new Uuid(),
+      name,
+      new Price(price),
+      new Uuid(adminId),
+    );
   }
 
   static restore({
     id,
     name,
     price,
-    createdBy,
+    adminId,
     active,
     createdAt,
     updatedAt,
@@ -61,7 +65,7 @@ export class ServiceEntity extends Entity {
       new Uuid(id),
       name,
       new Price(price),
-      createdBy,
+      new Uuid(adminId),
       active,
       createdAt,
       updatedAt,
@@ -84,8 +88,8 @@ export class ServiceEntity extends Entity {
     return this._updatedAt;
   }
 
-  get createdBy(): AdminEntity {
-    return this._createdBy;
+  get adminId(): Uuid {
+    return this._adminId;
   }
 
   changeName(name: string): void {
@@ -113,7 +117,7 @@ export class ServiceEntity extends Entity {
   }
 
   toString(): string {
-    return `ServiceEntity { id: ${this.id.value}, name: ${this.name}, price: ${this.price.toString()}, active: ${this.isActive()}, createdAt: ${this.createdAt.toISOString()}, updatedAt: ${this.updatedAt.toISOString()}, createdBy: ${this.createdBy.toString()} }`;
+    return `ServiceEntity { id: ${this.id.value}, name: ${this.name}, price: ${this.price.toString()}, active: ${this.isActive()}, createdAt: ${this.createdAt.toISOString()}, updatedAt: ${this.updatedAt.toISOString()}, adminId: ${this.adminId.toString()} }`;
   }
 
   toJSON() {
@@ -124,7 +128,7 @@ export class ServiceEntity extends Entity {
       active: this.isActive(),
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
-      createdBy: this.createdBy.toJSON(),
+      adminId: this.adminId.toString(),
     };
   }
 }
