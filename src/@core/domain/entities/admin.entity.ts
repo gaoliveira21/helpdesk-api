@@ -3,6 +3,7 @@ import { Email, Uuid, PasswordHash } from '../value_objects';
 import { CustomerEntity } from './customer.entity';
 import { ServiceEntity } from './service.entity';
 import { CreateTechnicianProps, TechnicianEntity } from './technician.entity';
+import { TicketEntity } from './ticket.entity';
 
 import { UserEntity } from './user.entity';
 
@@ -112,5 +113,10 @@ export class AdminEntity extends UserEntity {
 
   updateCustomer(customer: CustomerEntity, { name }: UpdateCustomerProps) {
     if (name) customer.changeName(name);
+  }
+
+  closeTicket(ticket: TicketEntity) {
+    if (ticket.isClosed()) return;
+    ticket.close();
   }
 }

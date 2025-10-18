@@ -3,3 +3,4 @@ export * from './admin.repository';
 export * from './technician.repository';
 export * from './customer.repository';
 export * from './service.repository';
+export * from './ticket.repository';
