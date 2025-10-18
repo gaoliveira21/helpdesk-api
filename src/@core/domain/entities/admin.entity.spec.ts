@@ -3,6 +3,7 @@ import { AdminEntity } from './admin.entity';
 import { CustomerEntity } from './customer.entity';
 import { ServiceEntity } from './service.entity';
 import { TechnicianEntity } from './technician.entity';
+import { TicketEntity } from './ticket.entity';
 
 describe('AdminEntity', () => {
   it('should create a new AdminEntity', async () => {
@@ -205,5 +206,51 @@ describe('AdminEntity', () => {
     expect(customer.passwordHash).not.toBe('pass123');
     expect(customer.createdAt).toBeInstanceOf(Date);
     expect(customer.updatedAt).toBeInstanceOf(Date);
+  });
+
+  it('should close a TicketEntity from AdminEntity', async () => {
+    const admin = await AdminEntity.create({
+      name: 'Jack',
+      email: 'jack@example.com',
+      plainTextPassword: 'pass123',
+    });
+    const ticket = TicketEntity.create({
+      name: 'Ticket One',
+      description: 'Description for Ticket One',
+      customerId: new Uuid().value,
+      services: [
+        ServiceEntity.create({
+          name: 'Service A',
+          price: 50,
+          adminId: admin.id.value,
+        }),
+      ],
+    });
+
+    admin.closeTicket(ticket);
+    expect(ticket.isClosed()).toBe(true);
+  });
+
+  it('should reopen a TicketEntity from AdminEntity', async () => {
+    const admin = await AdminEntity.create({
+      name: 'Jack',
+      email: 'jack@example.com',
+      plainTextPassword: 'pass123',
+    });
+    const ticket = TicketEntity.create({
+      name: 'Ticket One',
+      description: 'Description for Ticket One',
+      customerId: new Uuid().value,
+      services: [
+        ServiceEntity.create({
+          name: 'Service A',
+          price: 50,
+          adminId: admin.id.value,
+        }),
+      ],
+    });
+
+    admin.reopenTicket(ticket);
+    expect(ticket.isInProgress()).toBe(true);
   });
 });

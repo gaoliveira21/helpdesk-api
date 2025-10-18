@@ -119,4 +119,9 @@ export class AdminEntity extends UserEntity {
     if (ticket.isClosed()) return;
     ticket.close();
   }
+
+  reopenTicket(ticket: TicketEntity) {
+    if (ticket.isInProgress()) return;
+    ticket.reopen();
+  }
 }
