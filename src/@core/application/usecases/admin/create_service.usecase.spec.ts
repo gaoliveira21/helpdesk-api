@@ -48,7 +48,7 @@ describe('CreateServiceUseCase', () => {
     expect(service).toBeDefined();
     expect(service?.name).toBe('Service 1');
     expect(service?.price.value).toBe(100);
-    expect(service?.createdBy.isEqual(admin)).toBe(true);
+    expect(service?.adminId.isEqual(admin.id)).toBe(true);
     expect(data).toBeDefined();
     expect(data!.id).toBeDefined();
     expect(data!.id).toBe(service?.id.value);
