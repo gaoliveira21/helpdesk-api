@@ -121,7 +121,7 @@ export class AdminEntity extends UserEntity {
   }
 
   reopenTicket(ticket: TicketEntity) {
-    if (ticket.isInProgress()) return;
+    if (ticket.isOpen()) return;
     ticket.reopen();
   }
 }

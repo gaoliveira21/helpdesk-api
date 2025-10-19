@@ -251,6 +251,6 @@ describe('AdminEntity', () => {
     });
 
     admin.reopenTicket(ticket);
-    expect(ticket.isInProgress()).toBe(true);
+    expect(ticket.isOpen()).toBe(true);
   });
 });

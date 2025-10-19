@@ -72,7 +72,7 @@ export class TicketEntity extends Entity {
       description,
       new Uuid(customerId),
       services,
-      TicketStatus.IN_PROGRESS,
+      TicketStatus.OPEN,
       new Date(),
       new Date(),
       technicianId ? new Uuid(technicianId) : undefined,
@@ -139,8 +139,8 @@ export class TicketEntity extends Entity {
     return this._status === TicketStatus.CLOSED;
   }
 
-  isInProgress(): boolean {
-    return this._status === TicketStatus.IN_PROGRESS;
+  isOpen(): boolean {
+    return this._status === TicketStatus.OPEN;
   }
 
   close(): void {
@@ -153,11 +153,11 @@ export class TicketEntity extends Entity {
   }
 
   reopen(): void {
-    if (this.isInProgress()) {
-      throw new Error('Ticket is already in progress.');
+    if (this.isOpen()) {
+      throw new Error('Ticket is already open.');
     }
 
-    this._status = TicketStatus.IN_PROGRESS;
+    this._status = TicketStatus.OPEN;
     this._updatedAt = new Date();
   }
 

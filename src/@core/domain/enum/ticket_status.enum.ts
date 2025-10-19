@@ -1,4 +1,4 @@
 export enum TicketStatus {
-  IN_PROGRESS = 'in_progress',
+  OPEN = 'open',
   CLOSED = 'closed',
 }

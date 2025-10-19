@@ -75,10 +75,10 @@ describe('ReopenTicketUseCase', () => {
     });
 
     const updatedTicket = await ticketRepository.findById(ticket.id.value);
-    expect(updatedTicket?.isInProgress()).toBe(true);
+    expect(updatedTicket?.isOpen()).toBe(true);
   });
 
-  it('should not change ticket status if already in progress', async () => {
+  it('should not change ticket status if already open', async () => {
     const { useCase, adminRepository, ticketRepository } = createUseCase();
     const admin = await AdminEntity.create({
       name: 'Admin User',
@@ -107,6 +107,6 @@ describe('ReopenTicketUseCase', () => {
     });
 
     const updatedTicket = await ticketRepository.findById(ticket.id.value);
-    expect(updatedTicket?.isInProgress()).toBe(true);
+    expect(updatedTicket?.isOpen()).toBe(true);
   });
 });

@@ -19,7 +19,7 @@ describe('TicketEntity', () => {
     });
 
     expect(ticket).toBeInstanceOf(TicketEntity);
-    expect(ticket.status).toEqual(TicketStatus.IN_PROGRESS);
+    expect(ticket.status).toEqual(TicketStatus.OPEN);
   });
 
   it('should throw an error if no services are provided', () => {
@@ -68,11 +68,11 @@ describe('TicketEntity', () => {
       ],
     });
 
-    expect(ticket.isInProgress()).toBe(true);
+    expect(ticket.isOpen()).toBe(true);
 
     ticket.close();
 
-    expect(ticket.isInProgress()).toBe(false);
+    expect(ticket.isOpen()).toBe(false);
   });
 
   it('should close the ticket', () => {
@@ -130,7 +130,7 @@ describe('TicketEntity', () => {
     ticket.close();
     ticket.reopen();
 
-    expect(ticket.status).toEqual(TicketStatus.IN_PROGRESS);
+    expect(ticket.status).toEqual(TicketStatus.OPEN);
   });
 
   it('should throw an error if ticket is already in progress', () => {
@@ -147,7 +147,7 @@ describe('TicketEntity', () => {
       ],
     });
 
-    expect(() => ticket.reopen()).toThrow('Ticket is already in progress.');
+    expect(() => ticket.reopen()).toThrow('Ticket is already open.');
   });
 
   it('should restore a TicketEntity from given data', () => {
