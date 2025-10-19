@@ -11,7 +11,7 @@ import {
 import { Uuid } from 'src/@core/domain/value_objects';
 
 describe('ReopenTicketUseCase', () => {
-  const createUseCaase = () => {
+  const createUseCase = () => {
     const adminRepository = new InMemoryAdminRepository();
     const ticketRepository = new InMemoryTicketRepository();
     const useCase = new ReopenTicket(adminRepository, ticketRepository);
@@ -20,7 +20,7 @@ describe('ReopenTicketUseCase', () => {
   };
 
   it('should throw an error if admin is not found', async () => {
-    const { useCase } = createUseCaase();
+    const { useCase } = createUseCase();
 
     await expect(
       useCase.execute({ ticketId: 'ticket-1', adminId: 'non-existent-admin' }),
@@ -28,7 +28,7 @@ describe('ReopenTicketUseCase', () => {
   });
 
   it('should throw an error if ticket is not found', async () => {
-    const { useCase, adminRepository } = createUseCaase();
+    const { useCase, adminRepository } = createUseCase();
     const admin = await AdminEntity.create({
       name: 'Admin User',
       email: 'admin@example.com',
@@ -45,7 +45,7 @@ describe('ReopenTicketUseCase', () => {
   });
 
   it('should reopen a ticket successfully', async () => {
-    const { useCase, adminRepository, ticketRepository } = createUseCaase();
+    const { useCase, adminRepository, ticketRepository } = createUseCase();
     const admin = await AdminEntity.create({
       name: 'Admin User',
       email: 'admin@example.com',
@@ -79,7 +79,7 @@ describe('ReopenTicketUseCase', () => {
   });
 
   it('should not change ticket status if already in progress', async () => {
-    const { useCase, adminRepository, ticketRepository } = createUseCaase();
+    const { useCase, adminRepository, ticketRepository } = createUseCase();
     const admin = await AdminEntity.create({
       name: 'Admin User',
       email: 'admin@example.com',
