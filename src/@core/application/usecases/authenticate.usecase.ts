@@ -7,11 +7,13 @@ import { Result } from 'src/@core/domain/usecases/usecase.interface';
 
 import { UserRepository } from 'src/@core/application/ports/repositories/user_repository.port';
 import { JwtSigner } from 'src/@core/application/ports/jwt_signer.port';
+import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
 
 export class Authenticate implements AuthenticateUseCase {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtSigner: JwtSigner,
+    private readonly confProvider: ConfProvider,
   ) {}
 
   async execute(input: AuthenticateInput): Promise<Result<AuthenticateOutput>> {
@@ -31,7 +33,7 @@ export class Authenticate implements AuthenticateUseCase {
       };
     }
 
-    const ttl = 1800 * 1000; // 30 minutes
+    const ttl = this.confProvider.get('auth.jwtExpiresIn');
     const accessToken = await this.jwtSigner.sign(
       { userId: user.id.value },
       ttl,

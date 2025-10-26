@@ -1,15 +1,23 @@
 import { InMemoryUserRepository } from 'src/@core/adapters/repositories/in_memory';
-import { Authenticate } from './authenticate.usecase';
 import { UserEntity } from 'src/@core/domain/entities';
 import { PasswordHash, Uuid } from 'src/@core/domain/value_objects';
 import { UserRole } from 'src/@core/domain/enum/user_role.enum';
 import { JwtProvider } from 'src/@core/adapters/jwt';
 
+import { Authenticate } from './authenticate.usecase';
+import { AppConfProvider } from 'src/@core/adapters/conf/app_conf_provider';
+
 describe('AuthenticateUseCase', () => {
+  beforeEach(() => {
+    process.env.JWT_SECRET = 'mysecretkey';
+    process.env.JWT_EXPIRES_IN = '1800000';
+  });
+
   const createUseCase = () => {
+    const confProvider = new AppConfProvider();
     const jwtProvider = new JwtProvider();
     const userRepository = new InMemoryUserRepository();
-    const useCase = new Authenticate(userRepository, jwtProvider);
+    const useCase = new Authenticate(userRepository, jwtProvider, confProvider);
 
     return { useCase, userRepository, jwtProvider };
   };
