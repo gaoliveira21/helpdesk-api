@@ -8,15 +8,9 @@ import { Authenticate } from './authenticate.usecase';
 import { AppConfProvider } from 'src/@core/adapters/conf/app_conf_provider';
 
 describe('AuthenticateUseCase', () => {
-  beforeEach(() => {
-    process.env.JWT_SECRET = 'mysecretkey';
-    process.env.JWT_ACCESS_TOKEN_EXPIRES_IN = '1800000';
-    process.env.JWT_REFRESH_TOKEN_EXPIRES_IN = '7200000';
-  });
-
   const createUseCase = () => {
     const confProvider = new AppConfProvider();
-    const jwtProvider = new JwtProvider();
+    const jwtProvider = new JwtProvider(confProvider);
     const userRepository = new InMemoryUserRepository();
     const useCase = new Authenticate(userRepository, jwtProvider, confProvider);
 

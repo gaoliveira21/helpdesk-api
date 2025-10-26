@@ -1,10 +1,18 @@
+import { AppConfProvider } from '../conf/app_conf_provider';
+
 import { TokenVerificationError } from './errors/token_verification.error';
 import { JwtProvider } from './jwt_provider';
 import { ExpiredTokenError } from './errors/expired_token.error';
 
 describe('JwtProvider', () => {
+  const createJwtProvider = () => {
+    const confProvider = new AppConfProvider();
+    const jwtProvider = new JwtProvider(confProvider);
+    return jwtProvider;
+  };
+
   it('should sign and verify a token correctly', async () => {
-    const jwtProvider = new JwtProvider();
+    const jwtProvider = createJwtProvider();
     const payload = { userId: '12345' };
     const ttlInMs = 60000; // 1 minute
 
@@ -16,7 +24,7 @@ describe('JwtProvider', () => {
   });
 
   it('should throw an TokenVerificationError for an invalid token', async () => {
-    const jwtProvider = new JwtProvider();
+    const jwtProvider = createJwtProvider();
     const invalidToken = 'invalid.token.here';
 
     await expect(jwtProvider.verify(invalidToken)).rejects.toThrow(
@@ -25,7 +33,7 @@ describe('JwtProvider', () => {
   });
 
   it('should throw an ExpiredTokenError for an expired token', async () => {
-    const jwtProvider = new JwtProvider();
+    const jwtProvider = createJwtProvider();
     const payload = { userId: '12345' };
     const ttlInMs = -1000; // 1 second
 

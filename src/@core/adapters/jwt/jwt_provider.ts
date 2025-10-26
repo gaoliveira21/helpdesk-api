@@ -1,14 +1,16 @@
 import * as jwt from 'jsonwebtoken';
 
 import { JwtSigner } from 'src/@core/application/ports/jwt_signer.port';
+import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
+
 import { TokenVerificationError } from './errors/token_verification.error';
 import { ExpiredTokenError } from './errors/expired_token.error';
 
 export class JwtProvider implements JwtSigner {
   private readonly _secret: string;
 
-  constructor() {
-    this._secret = 'any_secret_key'; // TODO: Move to env variable
+  constructor(private readonly confProvider: ConfProvider) {
+    this._secret = this.confProvider.get('auth.secret');
   }
 
   async sign(
