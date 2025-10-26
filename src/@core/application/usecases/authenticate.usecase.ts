@@ -33,7 +33,7 @@ export class Authenticate implements AuthenticateUseCase {
       };
     }
 
-    const ttl = this.confProvider.get('auth.jwtExpiresIn');
+    const ttl = this.confProvider.get('auth.accessTokenExpiresIn');
     const accessToken = await this.jwtSigner.sign(
       { userId: user.id.value },
       ttl,

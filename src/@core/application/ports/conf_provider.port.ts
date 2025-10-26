@@ -1,7 +1,8 @@
 export type Config = {
   auth: {
-    jwtSecret: string;
-    jwtExpiresIn: number;
+    secret: string;
+    accessTokenExpiresIn: number;
+    refreshTokenExpiresIn: number;
   };
 };
 

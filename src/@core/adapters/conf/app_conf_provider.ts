@@ -29,8 +29,9 @@ export class AppConfProvider implements ConfProvider {
   private loadFromEnv() {
     this._config = {
       auth: {
-        jwtSecret: process.env.JWT_SECRET || '',
-        jwtExpiresIn: Number(process.env.JWT_EXPIRES_IN),
+        secret: process.env.JWT_SECRET || '',
+        accessTokenExpiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES_IN),
+        refreshTokenExpiresIn: Number(process.env.JWT_REFRESH_TOKEN_EXPIRES_IN),
       },
     };
   }
@@ -38,8 +39,9 @@ export class AppConfProvider implements ConfProvider {
   private validate() {
     const schema = z.object({
       auth: z.object({
-        jwtSecret: z.string().nonempty(),
-        jwtExpiresIn: z.number().min(1),
+        secret: z.string().nonempty(),
+        accessTokenExpiresIn: z.number().min(1),
+        refreshTokenExpiresIn: z.number().min(1),
       }),
     });
 
