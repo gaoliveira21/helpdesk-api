@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 
-import { InMemoryUserRepository } from 'src/@core/adapters/repositories/in_memory';
+import { TypeORMUserRepository } from 'src/@core/adapters/repositories/typeorm';
 import { AppConfProvider } from 'src/@core/adapters/conf/app_conf_provider';
 import { JwtProvider } from 'src/@core/adapters/jwt';
 
@@ -9,6 +10,7 @@ import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
 import { JwtSigner } from 'src/@core/application/ports/jwt_signer.port';
 
 import { Authenticate } from 'src/@core/application/usecases/authenticate.usecase';
+
 import { AuthController } from './auth.controller';
 
 @Module({
@@ -19,7 +21,9 @@ import { AuthController } from './auth.controller';
     },
     {
       provide: UserRepository,
-      useFactory: () => new InMemoryUserRepository(),
+      useFactory: (dataSource: DataSource) =>
+        new TypeORMUserRepository(dataSource),
+      inject: [DataSource],
     },
     {
       provide: JwtSigner,
