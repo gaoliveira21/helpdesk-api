@@ -6,6 +6,7 @@ import { JwtProvider } from 'src/@core/adapters/jwt';
 
 import { Authenticate } from './authenticate.usecase';
 import { AppConfProvider } from 'src/@core/adapters/conf/app_conf_provider';
+import { InvalidCredentialsError } from '../errors/invalid_credentials.error';
 
 describe('AuthenticateUseCase', () => {
   const createUseCase = () => {
@@ -29,7 +30,7 @@ describe('AuthenticateUseCase', () => {
 
     expect(result).toEqual({
       data: null,
-      error: new Error('User not found'),
+      error: new InvalidCredentialsError(),
     });
   });
 
@@ -57,7 +58,7 @@ describe('AuthenticateUseCase', () => {
 
     expect(result).toEqual({
       data: null,
-      error: new Error('Password does not match'),
+      error: new InvalidCredentialsError(),
     });
   });
 

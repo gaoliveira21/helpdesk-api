@@ -47,5 +47,18 @@ describe('Auth', () => {
           });
       },
     );
+
+    it('should return 400 if credentials are invalid', async () => {
+      await request(app.getHttpServer())
+        .post('/auth')
+        .send({
+          email: 'nonexistent@example.com',
+          password: 'validPassword123',
+        })
+        .expect(400)
+        .expect(({ body }) => {
+          expect(body.message).toContain('Invalid credentials');
+        });
+    });
   });
 });

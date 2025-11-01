@@ -8,6 +8,7 @@ import { Result } from 'src/@core/domain/usecases/usecase.interface';
 import { UserRepository } from 'src/@core/application/ports/repositories/user_repository.port';
 import { JwtSigner } from 'src/@core/application/ports/jwt_signer.port';
 import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
+import { InvalidCredentialsError } from '../errors/invalid_credentials.error';
 
 export class Authenticate implements AuthenticateUseCase {
   constructor(
@@ -21,7 +22,7 @@ export class Authenticate implements AuthenticateUseCase {
     if (!user) {
       return {
         data: null,
-        error: new Error('User not found'),
+        error: new InvalidCredentialsError(),
       };
     }
 
@@ -29,7 +30,7 @@ export class Authenticate implements AuthenticateUseCase {
     if (!passwordMatched) {
       return {
         data: null,
-        error: new Error('Password does not match'),
+        error: new InvalidCredentialsError(),
       };
     }
 

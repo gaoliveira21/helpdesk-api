@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   InternalServerErrorException,
@@ -6,6 +7,7 @@ import {
 } from '@nestjs/common';
 
 import { Authenticate } from 'src/@core/application/usecases/authenticate.usecase';
+import { InvalidCredentialsError } from 'src/@core/application/errors/invalid_credentials.error';
 
 import { AuthenticateDto } from './dtos/authenticate.dto';
 
@@ -21,7 +23,12 @@ export class AuthController {
     });
 
     if (error) {
-      throw new InternalServerErrorException('Authentication failed');
+      switch (error.constructor) {
+        case InvalidCredentialsError:
+          throw new BadRequestException(error.message);
+        default:
+          throw new InternalServerErrorException('Authentication failed');
+      }
     }
 
     return data;
