@@ -9,3 +9,5 @@ export type Config = {
 export interface ConfProvider {
   get<P extends GetKeys<Config>>(path: P): ValueAtPath<Config, P>;
 }
+
+export const ConfProvider = Symbol('ConfProvider');
