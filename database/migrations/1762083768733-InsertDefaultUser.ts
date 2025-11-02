@@ -1,13 +1,11 @@
-import typeorm from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
 import bcrypt from 'bcryptjs';
 import { v7 as uuidv7 } from 'uuid';
 
-export class InsertDefaultUser1762083768733
-  implements typeorm.MigrationInterface
-{
+export class InsertDefaultUser1762083768733 implements MigrationInterface {
   private readonly id = uuidv7();
 
-  public async up(queryRunner: typeorm.QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     const email = process.env.DEFAULT_ADMIN_EMAIL;
     const password = process.env.DEFAULT_ADMIN_PASSWORD;
     const saltRounds = Number(process.env.PASSWORD_SALT_ROUNDS);
@@ -29,7 +27,7 @@ export class InsertDefaultUser1762083768733
     });
   }
 
-  public async down(queryRunner: typeorm.QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.manager.delete('users', { id: this.id });
   }
 }

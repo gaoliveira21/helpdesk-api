@@ -1,11 +1,8 @@
-import typeorm from 'typeorm';
-
-export class CreateUsersTable1762034264877
-  implements typeorm.MigrationInterface
-{
-  public async up(queryRunner: typeorm.QueryRunner): Promise<void> {
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+export class CreateUsersTable1762034264877 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
-      new typeorm.Table({
+      new Table({
         name: 'users',
         columns: [
           {
@@ -54,7 +51,7 @@ export class CreateUsersTable1762034264877
     );
   }
 
-  public async down(queryRunner: typeorm.QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable('users');
   }
 }

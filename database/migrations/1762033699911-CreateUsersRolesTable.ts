@@ -1,11 +1,9 @@
-import typeorm from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateUsersRolesTable1762033699911
-  implements typeorm.MigrationInterface
-{
-  public async up(queryRunner: typeorm.QueryRunner): Promise<void> {
+export class CreateUsersRolesTable1762033699911 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
-      new typeorm.Table({
+      new Table({
         name: 'users_roles',
         columns: [
           {
@@ -23,7 +21,7 @@ export class CreateUsersRolesTable1762033699911
     );
   }
 
-  public async down(queryRunner: typeorm.QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable('users_roles');
   }
 }
