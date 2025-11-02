@@ -4,8 +4,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { User } from './@core/adapters/repositories/typeorm/entities/user';
-import { UserRole } from './@core/adapters/repositories/typeorm/entities/user_role';
+import * as TypeOrmEntities from './@core/adapters/repositories/typeorm/entities';
 
 import { AuthModule } from './auth/auth.module';
 
@@ -21,7 +20,7 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, UserRole],
+      entities: Object.values(TypeOrmEntities),
     }),
     AuthModule,
   ],
