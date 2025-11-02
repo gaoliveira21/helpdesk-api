@@ -3,7 +3,7 @@ import { InMemoryUserRepository } from 'src/@core/adapters/repositories/in_memor
 import { UpdatePassword } from './update_password.usecase';
 import { UserEntity } from 'src/@core/domain/entities/user.entity';
 import { PasswordHash, Uuid } from 'src/@core/domain/value_objects';
-import { UserRole } from 'src/@core/domain/enum/user_role.enum';
+import { UserRoleEnum } from 'src/@core/domain/enum/user_role.enum';
 
 describe('UpdatePasswordUseCase', () => {
   const createUseCase = () => {
@@ -37,7 +37,7 @@ describe('UpdatePasswordUseCase', () => {
       passwordHash: passwordHash.value,
       createdAt: new Date(),
       updatedAt: new Date(),
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
     });
     await userRepository.save(user);
 

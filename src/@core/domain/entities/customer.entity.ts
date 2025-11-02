@@ -1,4 +1,4 @@
-import { UserRole } from '../enum/user_role.enum';
+import { UserRoleEnum } from '../enum/user_role.enum';
 import { Email, PasswordHash, Uuid } from '../value_objects';
 import { UserEntity } from './user.entity';
 
@@ -31,7 +31,7 @@ export class CustomerEntity extends UserEntity {
       name,
       email,
       passwordHash,
-      UserRole.CUSTOMER,
+      UserRoleEnum.CUSTOMER,
       createdAt,
       updatedAt,
     );

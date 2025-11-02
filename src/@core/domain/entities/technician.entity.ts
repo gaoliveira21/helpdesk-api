@@ -1,4 +1,4 @@
-import { UserRole } from '../enum/user_role.enum';
+import { UserRoleEnum } from '../enum/user_role.enum';
 import { Email, Uuid, PasswordHash, Hour } from '../value_objects';
 import { AdminEntity } from './admin.entity';
 
@@ -17,7 +17,7 @@ export type RestoreTechnicianProps = {
   name: string;
   email: string;
   passwordHash: string;
-  role: UserRole;
+  role: UserRoleEnum;
   shift: number[];
   createdBy: AdminEntity;
   createdAt: Date;
@@ -49,9 +49,9 @@ export class TechnicianEntity extends UserEntity {
     createdBy: AdminEntity,
     createdAt?: Date,
     updatedAt?: Date,
-    role: UserRole = UserRole.TECHNICIAN,
+    role: UserRoleEnum = UserRoleEnum.TECHNICIAN,
   ) {
-    if (role !== UserRole.TECHNICIAN) {
+    if (role !== UserRoleEnum.TECHNICIAN) {
       throw new Error('Role must be TECHNICIAN for TechnicianEntity');
     }
 

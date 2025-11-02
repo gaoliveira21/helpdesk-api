@@ -1,4 +1,4 @@
-import { TicketStatus } from '../enum/ticket_status.enum';
+import { TicketStatusEnum } from '../enum/ticket_status.enum';
 import { Uuid } from '../value_objects';
 import { ServiceEntity } from './service.entity';
 import { TicketEntity } from './ticket.entity';
@@ -19,7 +19,7 @@ describe('TicketEntity', () => {
     });
 
     expect(ticket).toBeInstanceOf(TicketEntity);
-    expect(ticket.status).toEqual(TicketStatus.OPEN);
+    expect(ticket.status).toEqual(TicketStatusEnum.OPEN);
   });
 
   it('should throw an error if no services are provided', () => {
@@ -91,7 +91,7 @@ describe('TicketEntity', () => {
 
     ticket.close();
 
-    expect(ticket.status).toEqual(TicketStatus.CLOSED);
+    expect(ticket.status).toEqual(TicketStatusEnum.CLOSED);
   });
 
   it('should throw an error if ticket is already closed', () => {
@@ -130,7 +130,7 @@ describe('TicketEntity', () => {
     ticket.close();
     ticket.reopen();
 
-    expect(ticket.status).toEqual(TicketStatus.OPEN);
+    expect(ticket.status).toEqual(TicketStatusEnum.OPEN);
   });
 
   it('should throw an error if ticket is already in progress', () => {
@@ -162,7 +162,7 @@ describe('TicketEntity', () => {
         adminId: new Uuid().toString(),
       }),
     ];
-    const status = TicketStatus.CLOSED;
+    const status = TicketStatusEnum.CLOSED;
     const technicianId = new Uuid().toString();
     const createdAt = new Date();
     const updatedAt = new Date();

@@ -1,4 +1,4 @@
-import { UserRole } from '../enum/user_role.enum';
+import { UserRoleEnum } from '../enum/user_role.enum';
 import { Email, Uuid, PasswordHash } from '../value_objects';
 
 import { Entity } from './entity.abstract';
@@ -8,7 +8,7 @@ export type RestoreUserProps = {
   name: string;
   email: string;
   passwordHash: string;
-  role: UserRole;
+  role: UserRoleEnum;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -19,14 +19,14 @@ export class UserEntity extends Entity {
   protected _passwordHash: PasswordHash;
   protected _createdAt: Date;
   protected _updatedAt: Date;
-  protected _role: UserRole;
+  protected _role: UserRoleEnum;
 
   protected constructor(
     id: Uuid,
     name: string,
     email: Email,
     passwordHash: PasswordHash,
-    role: UserRole,
+    role: UserRoleEnum,
     createdAt?: Date,
     updatedAt?: Date,
   ) {
@@ -71,7 +71,7 @@ export class UserEntity extends Entity {
     return this._passwordHash;
   }
 
-  get role(): UserRole {
+  get role(): UserRoleEnum {
     return this._role;
   }
 

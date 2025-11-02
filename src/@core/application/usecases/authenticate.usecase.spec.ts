@@ -1,7 +1,7 @@
 import { InMemoryUserRepository } from 'src/@core/adapters/repositories/in_memory';
 import { UserEntity } from 'src/@core/domain/entities';
 import { PasswordHash, Uuid } from 'src/@core/domain/value_objects';
-import { UserRole } from 'src/@core/domain/enum/user_role.enum';
+import { UserRoleEnum } from 'src/@core/domain/enum/user_role.enum';
 import { JwtProvider } from 'src/@core/adapters/jwt';
 
 import { Authenticate } from './authenticate.usecase';
@@ -43,7 +43,7 @@ describe('AuthenticateUseCase', () => {
       email: 'test@example.com',
       passwordHash: passwordHash.value,
       name: 'Test User',
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -75,7 +75,7 @@ describe('AuthenticateUseCase', () => {
       email: 'test@example.com',
       passwordHash: passwordHash.value,
       name: 'Test User',
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

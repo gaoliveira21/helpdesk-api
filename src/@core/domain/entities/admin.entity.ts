@@ -1,4 +1,4 @@
-import { UserRole } from '../enum/user_role.enum';
+import { UserRoleEnum } from '../enum/user_role.enum';
 import { Email, Uuid, PasswordHash } from '../value_objects';
 import { CustomerEntity } from './customer.entity';
 import { ServiceEntity } from './service.entity';
@@ -47,7 +47,15 @@ export class AdminEntity extends UserEntity {
     createdAt?: Date,
     updatedAt?: Date,
   ) {
-    super(id, name, email, passwordHash, UserRole.ADMIN, createdAt, updatedAt);
+    super(
+      id,
+      name,
+      email,
+      passwordHash,
+      UserRoleEnum.ADMIN,
+      createdAt,
+      updatedAt,
+    );
   }
 
   static async create({

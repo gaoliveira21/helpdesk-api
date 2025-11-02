@@ -1,4 +1,4 @@
-import { UserRole } from '../enum/user_role.enum';
+import { UserRoleEnum } from '../enum/user_role.enum';
 import { PasswordHash, Uuid } from '../value_objects';
 import { UserEntity } from './user.entity';
 
@@ -12,7 +12,7 @@ describe('UserEntity', () => {
       name: 'Jane Doe',
       email: 'jane.doe@example.com',
       passwordHash: 'hashedPassword123',
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
       createdAt,
       updatedAt,
     });
@@ -23,7 +23,7 @@ describe('UserEntity', () => {
     expect(user.passwordHash.value).toBe('hashedPassword123');
     expect(user.createdAt).toBe(createdAt);
     expect(user.updatedAt).toBe(updatedAt);
-    expect(user.role).toBe(UserRole.ADMIN);
+    expect(user.role).toBe(UserRoleEnum.ADMIN);
   });
 
   it('should check equality between two UserEntity instances', async () => {
@@ -32,7 +32,7 @@ describe('UserEntity', () => {
       name: 'Alice',
       email: 'alice@example.com',
       passwordHash: 'mySecurePassword',
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -41,7 +41,7 @@ describe('UserEntity', () => {
       name: user1.name,
       email: user1.email.value,
       passwordHash: user1.passwordHash.value,
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
       createdAt: user1.createdAt,
       updatedAt: user1.updatedAt,
     });
@@ -50,7 +50,7 @@ describe('UserEntity', () => {
       name: 'Bob',
       email: 'bob@example.com',
       passwordHash: 'anotherPassword',
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -65,7 +65,7 @@ describe('UserEntity', () => {
       name: 'Charlie',
       email: 'charlie@example.com',
       passwordHash: 'pass123',
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -80,7 +80,7 @@ describe('UserEntity', () => {
       name: 'Dave',
       email: 'dave@example.com',
       passwordHash: 'pass123',
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -100,7 +100,7 @@ describe('UserEntity', () => {
       name: 'Eve',
       email: 'eve@example.com',
       passwordHash: passwordHash.value,
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -119,7 +119,7 @@ describe('UserEntity', () => {
       name: 'Eve',
       email: 'eve@example.com',
       passwordHash: passwordHash.value,
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -137,7 +137,7 @@ describe('UserEntity', () => {
       name: 'Eve',
       email: 'eve@example.com',
       passwordHash: passwordHash.value,
-      role: UserRole.ADMIN,
+      role: UserRoleEnum.ADMIN,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

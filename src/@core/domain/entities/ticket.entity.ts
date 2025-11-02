@@ -1,4 +1,4 @@
-import { TicketStatus } from '../enum/ticket_status.enum';
+import { TicketStatusEnum } from '../enum/ticket_status.enum';
 import { Uuid } from '../value_objects';
 import { Entity } from './entity.abstract';
 import { ServiceEntity } from './service.entity';
@@ -17,7 +17,7 @@ export type RestoreTicketProps = {
   description: string;
   customerId: string;
   services: ServiceEntity[];
-  status: TicketStatus;
+  status: TicketStatusEnum;
   technicianId?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -26,7 +26,7 @@ export type RestoreTicketProps = {
 export class TicketEntity extends Entity {
   private _name: string;
   private _description: string;
-  private _status: TicketStatus;
+  private _status: TicketStatusEnum;
   private _customerId: Uuid;
   private _services: ServiceEntity[];
   private _technicianId?: Uuid;
@@ -39,7 +39,7 @@ export class TicketEntity extends Entity {
     description: string,
     customerId: Uuid,
     services: ServiceEntity[],
-    status: TicketStatus,
+    status: TicketStatusEnum,
     createdAt: Date,
     updatedAt: Date,
     technicianId?: Uuid,
@@ -72,7 +72,7 @@ export class TicketEntity extends Entity {
       description,
       new Uuid(customerId),
       services,
-      TicketStatus.OPEN,
+      TicketStatusEnum.OPEN,
       new Date(),
       new Date(),
       technicianId ? new Uuid(technicianId) : undefined,
@@ -111,7 +111,7 @@ export class TicketEntity extends Entity {
     return this._description;
   }
 
-  get status(): TicketStatus {
+  get status(): TicketStatusEnum {
     return this._status;
   }
 
@@ -136,11 +136,11 @@ export class TicketEntity extends Entity {
   }
 
   isClosed(): boolean {
-    return this._status === TicketStatus.CLOSED;
+    return this._status === TicketStatusEnum.CLOSED;
   }
 
   isOpen(): boolean {
-    return this._status === TicketStatus.OPEN;
+    return this._status === TicketStatusEnum.OPEN;
   }
 
   close(): void {
@@ -148,7 +148,7 @@ export class TicketEntity extends Entity {
       throw new Error('Ticket is already closed.');
     }
 
-    this._status = TicketStatus.CLOSED;
+    this._status = TicketStatusEnum.CLOSED;
     this._updatedAt = new Date();
   }
 
@@ -157,7 +157,7 @@ export class TicketEntity extends Entity {
       throw new Error('Ticket is already open.');
     }
 
-    this._status = TicketStatus.OPEN;
+    this._status = TicketStatusEnum.OPEN;
     this._updatedAt = new Date();
   }
 

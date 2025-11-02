@@ -1,4 +1,4 @@
-import { UserRole } from '../enum/user_role.enum';
+import { UserRoleEnum } from '../enum/user_role.enum';
 import { Hour, Uuid } from '../value_objects';
 import { AdminEntity } from './admin.entity';
 
@@ -60,7 +60,7 @@ describe('TechnicianEntity', () => {
       createdBy,
       createdAt,
       updatedAt,
-      role: UserRole.TECHNICIAN,
+      role: UserRoleEnum.TECHNICIAN,
     });
 
     expect(technician).toBeInstanceOf(TechnicianEntity);
@@ -73,7 +73,7 @@ describe('TechnicianEntity', () => {
     expect(technician.createdAt).toBe(createdAt);
     expect(technician.updatedAt).toBe(updatedAt);
     expect(technician.createdBy).toBe(createdBy);
-    expect(technician.role).toBe(UserRole.TECHNICIAN);
+    expect(technician.role).toBe(UserRoleEnum.TECHNICIAN);
   });
 
   it('should have a proper string representation', async () => {
