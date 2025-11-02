@@ -4,7 +4,9 @@ import { ValueObject } from './value_object.interface';
 
 export class PasswordHash implements ValueObject<string> {
   private readonly _value: string;
-  private static readonly SALT_ROUNDS = 10;
+  private static readonly SALT_ROUNDS = Number(
+    process.env.PASSWORD_SALT_ROUNDS || 10,
+  );
 
   private constructor(value: string) {
     this._value = value;
