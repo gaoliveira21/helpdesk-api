@@ -1,9 +1,9 @@
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-
-import { AppModule } from 'src/app.module';
 import { App } from 'supertest/types';
+
+import { AppModule } from 'src/modules/app.module';
 
 describe('Auth', () => {
   let app: INestApplication<App>;
@@ -58,6 +58,29 @@ describe('Auth', () => {
         .expect(400)
         .expect(({ body }) => {
           expect(body.message).toContain('Invalid credentials');
+        });
+    });
+
+    it('should return 201 and set cookies if credentials are valid', async () => {
+      await request(app.getHttpServer())
+        .post('/auth')
+        .send({
+          email: process.env.DEFAULT_ADMIN_EMAIL,
+          password: process.env.DEFAULT_ADMIN_PASSWORD,
+        })
+        .expect(201)
+        .expect(({ body, headers }) => {
+          console.log(headers['set-cookie']);
+          expect(body.accessTokenExpiresAt).toBeDefined();
+          expect(body.refreshTokenExpiresAt).toBeDefined();
+          expect(headers['set-cookie']).toMatchObject([
+            expect.stringMatching(
+              /accessToken=.+; Path=\/; Expires=.+; HttpOnly; SameSite=None/,
+            ),
+            expect.stringMatching(
+              /refreshToken=.+; Path=\/auth\/refresh-token; Expires=.+; HttpOnly; SameSite=None/,
+            ),
+          ]);
         });
     });
   });
