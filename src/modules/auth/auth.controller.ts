@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  HttpStatus,
   Inject,
   InternalServerErrorException,
   Post,
@@ -58,9 +59,9 @@ export class AuthController {
       path: '/auth/refresh-token',
     });
 
-    return {
+    return res.status(HttpStatus.CREATED).send({
       accessTokenExpiresAt: data.accessToken.expiresAt,
       refreshTokenExpiresAt: data.refreshToken.expiresAt,
-    };
+    });
   }
 }
