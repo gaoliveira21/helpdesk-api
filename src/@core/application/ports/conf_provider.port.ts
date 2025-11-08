@@ -1,8 +1,8 @@
 export type Config = {
   auth: {
     secret: string;
-    accessTokenExpiresIn: number;
-    refreshTokenExpiresIn: number;
+    accessTokenExpiresIn: TimeDuration;
+    refreshTokenExpiresIn: TimeDuration;
   };
 };
 

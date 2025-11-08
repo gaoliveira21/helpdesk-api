@@ -6,15 +6,15 @@ describe('AppConfProvider', () => {
 
     expect(confProvider.get('auth.secret')).toBe(process.env.JWT_SECRET);
     expect(confProvider.get('auth.accessTokenExpiresIn')).toBe(
-      Number(process.env.JWT_ACCESS_TOKEN_EXPIRES_IN),
+      process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
     );
     expect(confProvider.get('auth.refreshTokenExpiresIn')).toBe(
-      Number(process.env.JWT_REFRESH_TOKEN_EXPIRES_IN),
+      process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
     );
     expect(confProvider.get('auth')).toEqual({
       secret: process.env.JWT_SECRET,
-      accessTokenExpiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES_IN),
-      refreshTokenExpiresIn: Number(process.env.JWT_REFRESH_TOKEN_EXPIRES_IN),
+      accessTokenExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
+      refreshTokenExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
     });
   });
 

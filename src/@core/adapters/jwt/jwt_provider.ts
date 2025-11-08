@@ -15,7 +15,7 @@ export class JwtProvider implements JwtSigner {
 
   async sign(
     payload: Record<string, unknown>,
-    ttlInMs: number,
+    ttl: TimeDuration,
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       jwt.sign(
@@ -23,7 +23,7 @@ export class JwtProvider implements JwtSigner {
         this._secret,
         {
           algorithm: 'HS256',
-          expiresIn: Math.floor(ttlInMs / 1000),
+          expiresIn: ttl,
         },
         (err, token) => {
           if (err) reject(err);

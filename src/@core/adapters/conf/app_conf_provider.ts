@@ -30,18 +30,25 @@ export class AppConfProvider implements ConfProvider {
     this._config = {
       auth: {
         secret: process.env.JWT_SECRET || '',
-        accessTokenExpiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES_IN),
-        refreshTokenExpiresIn: Number(process.env.JWT_REFRESH_TOKEN_EXPIRES_IN),
+        accessTokenExpiresIn: process.env
+          .JWT_ACCESS_TOKEN_EXPIRES_IN as TimeDuration,
+        refreshTokenExpiresIn: process.env
+          .JWT_REFRESH_TOKEN_EXPIRES_IN as TimeDuration,
       },
     };
   }
 
   private validate() {
+    const timeDurationSchema = z
+      .stringFormat('TimeDuration', /^\d+(w|d|h|min)$/)
+      .brand<TimeDuration>()
+      .nonempty();
+
     const schema = z.object({
       auth: z.object({
         secret: z.string().nonempty(),
-        accessTokenExpiresIn: z.number().min(1),
-        refreshTokenExpiresIn: z.number().min(1),
+        accessTokenExpiresIn: timeDurationSchema,
+        refreshTokenExpiresIn: timeDurationSchema,
       }),
     });
 
@@ -51,6 +58,6 @@ export class AppConfProvider implements ConfProvider {
         `Invalid configuration: ${JSON.stringify(result.error.issues)}`,
       );
     }
-    this._config = result.data;
+    this._config = result.data as Config;
   }
 }

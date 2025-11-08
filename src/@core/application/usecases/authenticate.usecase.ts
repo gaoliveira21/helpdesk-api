@@ -44,10 +44,33 @@ export class Authenticate implements AuthenticateUseCase {
       data: {
         accessToken: {
           token: accessToken,
-          expiresAt: new Date(Date.now() + ttl).toISOString(),
+          expiresAt: this.calculateExpiryDate(ttl),
         },
       },
       error: null,
     };
+  }
+
+  private calculateExpiryDate(ttl: TimeDuration): string {
+    const ttlInMs = this.convertTimeDurationToMs(ttl);
+    return new Date(Date.now() + ttlInMs).toISOString();
+  }
+
+  private convertTimeDurationToMs(ttl: TimeDuration): number {
+    const unit = ttl.replace(/\d+/g, '').toLowerCase();
+    const value = Number(ttl.replace(/\D+/g, ''));
+
+    switch (unit) {
+      case 'w':
+        return value * 7 * 24 * 60 * 60 * 1000;
+      case 'd':
+        return value * 24 * 60 * 60 * 1000;
+      case 'h':
+        return value * 60 * 60 * 1000;
+      case 'min':
+        return value * 60 * 1000;
+      default:
+        throw new Error(`Invalid time unit: ${unit}`);
+    }
   }
 }
