@@ -10,6 +10,10 @@ export interface AuthenticateOutput {
     token: string;
     expiresAt: string;
   };
+  refreshToken: {
+    token: string;
+    expiresAt: string;
+  };
 }
 
 export interface AuthenticateUseCase

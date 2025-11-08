@@ -11,6 +11,7 @@ import { InvalidCredentialsError } from '../errors/invalid_credentials.error';
 describe('AuthenticateUseCase', () => {
   const createUseCase = (tokenExp: TimeDuration = '30min') => {
     process.env.JWT_ACCESS_TOKEN_EXPIRES_IN = tokenExp;
+    process.env.JWT_REFRESH_TOKEN_EXPIRES_IN = tokenExp;
 
     const confProvider = new AppConfProvider();
     const jwtProvider = new JwtProvider(confProvider);
@@ -19,6 +20,10 @@ describe('AuthenticateUseCase', () => {
 
     return { useCase, userRepository, jwtProvider, confProvider };
   };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('should throw an error if user is not found', async () => {
     const { useCase } = createUseCase();
@@ -101,12 +106,22 @@ describe('AuthenticateUseCase', () => {
 
       const result = await useCase.execute(input);
 
-      expect(jwtProvider.sign).toHaveBeenCalledWith(
+      expect(jwtProvider.sign).toHaveBeenNthCalledWith(
+        1,
         { userId: user.id.value },
         confProvider.get('auth.accessTokenExpiresIn'),
       );
       expect(result.data?.accessToken.token).toBe('mocked_jwt_token');
       expect(result.data?.accessToken.expiresAt).toBe(
+        new Date(now + ms).toISOString(),
+      );
+      expect(jwtProvider.sign).toHaveBeenNthCalledWith(
+        2,
+        { userId: user.id.value },
+        confProvider.get('auth.refreshTokenExpiresIn'),
+      );
+      expect(result.data?.refreshToken.token).toBe('mocked_jwt_token');
+      expect(result.data?.refreshToken.expiresAt).toBe(
         new Date(now + ms).toISOString(),
       );
       expect(result.error).toBeNull();

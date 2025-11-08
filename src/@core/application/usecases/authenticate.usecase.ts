@@ -34,17 +34,27 @@ export class Authenticate implements AuthenticateUseCase {
       };
     }
 
-    const ttl = this.confProvider.get('auth.accessTokenExpiresIn');
+    const accessTokenTtl = this.confProvider.get('auth.accessTokenExpiresIn');
     const accessToken = await this.jwtSigner.sign(
       { userId: user.id.value },
-      ttl,
+      accessTokenTtl,
+    );
+
+    const refreshTokenTtl = this.confProvider.get('auth.refreshTokenExpiresIn');
+    const refreshToken = await this.jwtSigner.sign(
+      { userId: user.id.value },
+      refreshTokenTtl,
     );
 
     return {
       data: {
         accessToken: {
           token: accessToken,
-          expiresAt: this.calculateExpiryDate(ttl),
+          expiresAt: this.calculateExpiryDate(accessTokenTtl),
+        },
+        refreshToken: {
+          token: refreshToken,
+          expiresAt: this.calculateExpiryDate(refreshTokenTtl),
         },
       },
       error: null,

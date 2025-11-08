@@ -1,4 +1,8 @@
 export type Config = {
+  app: {
+    port: number;
+    env: Environment;
+  };
   auth: {
     secret: string;
     accessTokenExpiresIn: TimeDuration;

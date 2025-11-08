@@ -28,14 +28,16 @@ export class AppConfProvider implements ConfProvider {
 
   private loadFromEnv() {
     this._config = {
+      app: {
+        port: Number(process.env.PORT || 3000),
+        env: process.env.NODE_ENV || 'development',
+      },
       auth: {
         secret: process.env.JWT_SECRET || '',
-        accessTokenExpiresIn: process.env
-          .JWT_ACCESS_TOKEN_EXPIRES_IN as TimeDuration,
-        refreshTokenExpiresIn: process.env
-          .JWT_REFRESH_TOKEN_EXPIRES_IN as TimeDuration,
+        accessTokenExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
+        refreshTokenExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
       },
-    };
+    } as Config;
   }
 
   private validate() {
@@ -45,6 +47,10 @@ export class AppConfProvider implements ConfProvider {
       .nonempty();
 
     const schema = z.object({
+      app: z.object({
+        port: z.number().int().positive(),
+        env: z.enum(['development', 'production', 'test']),
+      }),
       auth: z.object({
         secret: z.string().nonempty(),
         accessTokenExpiresIn: timeDurationSchema,
