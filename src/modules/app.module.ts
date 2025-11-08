@@ -4,7 +4,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import * as TypeOrmEntities from './@core/adapters/repositories/typeorm/entities';
+import * as TypeOrmEntities from 'src/@core/adapters/repositories/typeorm/entities';
 
 import { AuthModule } from './auth/auth.module';
 
