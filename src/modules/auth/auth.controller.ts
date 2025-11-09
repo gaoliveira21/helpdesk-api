@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   HttpStatus,
   Inject,
   InternalServerErrorException,
@@ -63,5 +64,12 @@ export class AuthController {
       accessTokenExpiresAt: data.accessToken.expiresAt,
       refreshTokenExpiresAt: data.refreshToken.expiresAt,
     });
+  }
+
+  @Delete('sign-out')
+  async signOut(@Response() res: Res) {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    return res.status(HttpStatus.NO_CONTENT).send();
   }
 }

@@ -84,4 +84,18 @@ describe('Auth', () => {
         });
     });
   });
+
+  describe('DELETE /auth/sign-out', () => {
+    it('should clear authentication cookies on sign-out', async () => {
+      await request(app.getHttpServer())
+        .delete('/auth/sign-out')
+        .expect(204)
+        .expect(({ headers }) => {
+          expect(headers['set-cookie']).toMatchObject([
+            'accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+            'refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+          ]);
+        });
+    });
+  });
 });
