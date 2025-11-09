@@ -2,7 +2,7 @@ import { InMemoryUserRepository } from 'src/@core/adapters/repositories/in_memor
 import { UserEntity } from 'src/@core/domain/entities';
 import { PasswordHash, Uuid } from 'src/@core/domain/value_objects';
 import { UserRoleEnum } from 'src/@core/domain/enum/user_role.enum';
-import { JwtProvider } from 'src/@core/adapters/jwt';
+import { JwtProvider } from 'src/@core/adapters/jwt/jwt_provider';
 
 import { Authenticate } from './authenticate.usecase';
 import { AppConfProvider } from 'src/@core/adapters/conf/app_conf_provider';

@@ -6,7 +6,7 @@ import {
 import { Result } from 'src/@core/domain/usecases/usecase.interface';
 
 import { UserRepository } from 'src/@core/application/ports/repositories/user_repository.port';
-import { JwtSigner } from 'src/@core/application/ports/jwt_signer.port';
+import { JwtSigner } from 'src/@core/application/ports/jwt/jwt_signer.port';
 import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
 import { InvalidCredentialsError } from '../errors/invalid_credentials.error';
 

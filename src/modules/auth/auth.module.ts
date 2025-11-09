@@ -3,11 +3,11 @@ import { DataSource } from 'typeorm';
 
 import { TypeORMUserRepository } from 'src/@core/adapters/repositories/typeorm';
 import { AppConfProvider } from 'src/@core/adapters/conf/app_conf_provider';
-import { JwtProvider } from 'src/@core/adapters/jwt';
+import { JwtProvider } from 'src/@core/adapters/jwt/jwt_provider';
 
 import { UserRepository } from 'src/@core/application/ports/repositories/user_repository.port';
 import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
-import { JwtSigner } from 'src/@core/application/ports/jwt_signer.port';
+import { JwtSigner } from 'src/@core/application/ports/jwt/jwt_signer.port';
 
 import { Authenticate } from 'src/@core/application/usecases/authenticate.usecase';
 

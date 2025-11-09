@@ -1,12 +1,15 @@
 import * as jwt from 'jsonwebtoken';
 
-import { JwtSigner } from 'src/@core/application/ports/jwt_signer.port';
+import { JwtSigner } from 'src/@core/application/ports/jwt/jwt_signer.port';
 import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
+import {
+  JwtVerifier,
+  JwtVerifyOutput,
+} from 'src/@core/application/ports/jwt/jwt_verifier.port';
+import { ExpiredTokenError } from 'src/@core/application/errors/expired_token.error';
+import { TokenVerificationError } from 'src/@core/application/errors/token_verification.error';
 
-import { TokenVerificationError } from './errors/token_verification.error';
-import { ExpiredTokenError } from './errors/expired_token.error';
-
-export class JwtProvider implements JwtSigner {
+export class JwtProvider implements JwtSigner, JwtVerifier {
   private readonly _secret: string;
 
   constructor(private readonly confProvider: ConfProvider) {
@@ -33,8 +36,10 @@ export class JwtProvider implements JwtSigner {
     });
   }
 
-  async verify<T = Record<string, unknown>>(token: string): Promise<T> {
-    return new Promise((resolve, reject) => {
+  async verify<T = Record<string, unknown>>(
+    token: string,
+  ): Promise<JwtVerifyOutput<T>> {
+    return new Promise((resolve) => {
       jwt.verify(
         token,
         this._secret,
@@ -42,12 +47,22 @@ export class JwtProvider implements JwtSigner {
         (err, decoded) => {
           if (err) {
             if (err instanceof jwt.TokenExpiredError) {
-              return reject(new ExpiredTokenError({ cause: err }));
+              return resolve({
+                data: null,
+                error: new ExpiredTokenError({ cause: err }),
+              });
             }
 
-            return reject(new TokenVerificationError({ cause: err }));
+            return resolve({
+              data: null,
+              error: new TokenVerificationError({ cause: err }),
+            });
           }
-          if (decoded) resolve(decoded as T);
+          if (decoded)
+            resolve({
+              data: decoded as T,
+              error: null,
+            });
         },
       );
     });
