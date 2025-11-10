@@ -32,7 +32,7 @@ describe('Auth', () => {
 
   describe('POST /auth', () => {
     it.each(['invalid-email', 'user@.com', 'user.com', '@example.com'])(
-      'should return a BadRequest error if email is invalid',
+      'should return a BadRequest error if email is invalid (%s)',
       async (email) => {
         await request(app.getHttpServer())
           .post('/auth')
@@ -45,7 +45,7 @@ describe('Auth', () => {
     );
 
     it.each(['', '123', 'short'])(
-      'should return a BadRequest error if password is invalid',
+      'should return a BadRequest error if password is invalid (%s)',
       async (password) => {
         await request(app.getHttpServer())
           .post('/auth')
