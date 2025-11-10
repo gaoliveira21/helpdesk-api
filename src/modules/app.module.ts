@@ -8,7 +8,6 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { NextFunction, Request, Response } from 'express';
 import { DataSource } from 'typeorm';
 
 import * as TypeOrmEntities from 'src/@core/adapters/repositories/typeorm/entities';
@@ -70,15 +69,9 @@ import { AuthMiddleware } from './@shared/middlewares/auth.middleware';
   ],
 })
 export class AppModule implements NestModule {
-  constructor(
-    private readonly validateAuthenticatedUser: ValidateAuthenticatedUser,
-  ) {}
-
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply((req: Request, res: Response, next: NextFunction) =>
-        new AuthMiddleware(this.validateAuthenticatedUser).use(req, res, next),
-      )
+      .apply(AuthMiddleware)
       .exclude({
         method: RequestMethod.POST,
         path: '/auth',

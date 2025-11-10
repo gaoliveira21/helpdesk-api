@@ -1,8 +1,9 @@
-import { NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 
 import { ValidateAuthenticatedUser } from 'src/@core/application/usecases/validate_authenticated_user';
 
+@Injectable()
 export class AuthMiddleware implements NestMiddleware {
   constructor(
     private readonly validateAuthenticatedUser: ValidateAuthenticatedUser,

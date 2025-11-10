@@ -2,11 +2,18 @@ import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { App } from 'supertest/types';
+import cookieParser from 'cookie-parser';
 
 import { AppModule } from 'src/modules/app.module';
 
+type Routes = {
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch';
+  path: string;
+};
+
 describe('Auth', () => {
   let app: INestApplication<App>;
+  const authRoutes: Routes[] = [{ method: 'delete', path: '/auth/sign-out' }];
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -14,6 +21,8 @@ describe('Auth', () => {
     }).compile();
 
     app = module.createNestApplication();
+    app.use(cookieParser());
+
     await app.init();
   });
 
@@ -70,7 +79,6 @@ describe('Auth', () => {
         })
         .expect(201)
         .expect(({ body, headers }) => {
-          console.log(headers['set-cookie']);
           expect(body.accessTokenExpiresAt).toBeDefined();
           expect(body.refreshTokenExpiresAt).toBeDefined();
           expect(headers['set-cookie']).toMatchObject([
@@ -87,7 +95,14 @@ describe('Auth', () => {
 
   describe('DELETE /auth/sign-out', () => {
     it('should clear authentication cookies on sign-out', async () => {
-      await request(app.getHttpServer())
+      const agent = request.agent(app.getHttpServer());
+
+      await agent.post('/auth').send({
+        email: process.env.DEFAULT_ADMIN_EMAIL,
+        password: process.env.DEFAULT_ADMIN_PASSWORD,
+      });
+
+      await agent
         .delete('/auth/sign-out')
         .expect(204)
         .expect(({ headers }) => {
@@ -98,4 +113,28 @@ describe('Auth', () => {
         });
     });
   });
+
+  describe.each(authRoutes)(
+    'Validate Authenticated route %s',
+    ({ method, path }) => {
+      it('should return 401 if token is not provided', async () => {
+        await request(app.getHttpServer())
+          [method](path)
+          .expect(401)
+          .expect(({ body }) => {
+            expect(body.message).toContain('Token not provided');
+          });
+      });
+
+      it('should return 401 if token is invalid', async () => {
+        await request(app.getHttpServer())
+          [method](path)
+          .set('Cookie', ['accessToken=invalid.token.here'])
+          .expect(401)
+          .expect(({ body }) => {
+            expect(body.message).toContain('Invalid token');
+          });
+      });
+    },
+  );
 });
