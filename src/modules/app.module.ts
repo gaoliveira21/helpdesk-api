@@ -20,8 +20,9 @@ import { JwtVerifier } from 'src/@core/application/ports/jwt/jwt_verifier.port';
 import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
 import { ValidateAuthenticatedUser } from 'src/@core/application/usecases/validate_authenticated_user';
 
-import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware } from './@shared/middlewares/auth.middleware';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AuthMiddleware } from './@shared/middlewares/auth.middleware';
       entities: Object.values(TypeOrmEntities),
     }),
     AuthModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [
