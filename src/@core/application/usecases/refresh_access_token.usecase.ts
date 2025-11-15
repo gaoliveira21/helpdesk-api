@@ -4,6 +4,7 @@ import {
   RefreshAccessTokenUseCase,
 } from 'src/@core/domain/usecases/refresh_access_token.usecase';
 import { Result } from 'src/@core/domain/usecases/usecase.interface';
+import { Time } from 'src/@core/domain/value_objects';
 
 import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
 import { UserRepository } from 'src/@core/application/ports/repositories/user_repository.port';
@@ -43,37 +44,18 @@ export class RefreshAccessToken implements RefreshAccessTokenUseCase {
       data: {
         accessToken: {
           token: accessToken,
-          expiresAt: this.calculateExpiryDate(accessTokenTtl),
+          expiresAt: Time.fromTimeDuration(accessTokenTtl)
+            .addTimeToDate(Date.now())
+            .toISOString(),
         },
         refreshToken: {
           token: refreshToken,
-          expiresAt: this.calculateExpiryDate(refreshTokenTtl),
+          expiresAt: Time.fromTimeDuration(refreshTokenTtl)
+            .addTimeToDate(Date.now())
+            .toISOString(),
         },
       },
       error: null,
     };
-  }
-
-  private calculateExpiryDate(ttl: TimeDuration): string {
-    const ttlInMs = this.convertTimeDurationToMs(ttl);
-    return new Date(Date.now() + ttlInMs).toISOString();
-  }
-
-  private convertTimeDurationToMs(ttl: TimeDuration): number {
-    const unit = ttl.replace(/\d+/g, '').toLowerCase();
-    const value = Number(ttl.replace(/\D+/g, ''));
-
-    switch (unit) {
-      case 'w':
-        return value * 7 * 24 * 60 * 60 * 1000;
-      case 'd':
-        return value * 24 * 60 * 60 * 1000;
-      case 'h':
-        return value * 60 * 60 * 1000;
-      case 'min':
-        return value * 60 * 1000;
-      default:
-        throw new Error(`Invalid time unit: ${unit}`);
-    }
   }
 }
