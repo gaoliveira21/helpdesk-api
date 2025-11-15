@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 const AuthenticateSchema = z.object({
   email: z.email(),
-  password: z.string().min(6),
+  password: z.string().min(6).max(25),
 });
 
 export class AuthenticateDto extends createZodDto(AuthenticateSchema) {}

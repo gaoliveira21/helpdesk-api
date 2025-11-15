@@ -7,6 +7,12 @@ describe('PasswordHash Value Object', () => {
     );
   });
 
+  it('should throw an error for passwords longer than 25 characters', async () => {
+    await expect(PasswordHash.create('a'.repeat(26))).rejects.toThrow(
+      'Password must be at most 25 characters long',
+    );
+  });
+
   it('should create a PasswordHash from plain text', async () => {
     const plainText = 'mySecurePassword';
     const passwordHash = await PasswordHash.create(plainText);

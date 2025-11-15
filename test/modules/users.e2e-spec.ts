@@ -32,7 +32,7 @@ describe('Users', () => {
   });
 
   describe('PATCH /users/password', () => {
-    it.each(['', '123', '12345'])(
+    it.each(['', '123', '12345', '12345678901234567890123456'])(
       'should return a BadRequest error if new password is invalid',
       async (newPassword) => {
         await agent
@@ -45,7 +45,7 @@ describe('Users', () => {
       },
     );
 
-    it.each(['', '123', '12345'])(
+    it.each(['', '123', '12345', '12345678901234567890123456'])(
       'should return a BadRequest error if current password is invalid',
       async (currentPassword) => {
         await agent

@@ -15,6 +15,8 @@ export class PasswordHash implements ValueObject<string> {
   static async create(plainText: string): Promise<PasswordHash> {
     if (plainText.length < 6)
       throw new Error('Password must be at least 6 characters long');
+    if (plainText.length > 25)
+      throw new Error('Password must be at most 25 characters long');
 
     const hash = await bcrypt.hash(plainText, PasswordHash.SALT_ROUNDS);
     return new PasswordHash(hash);

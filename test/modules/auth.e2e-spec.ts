@@ -44,7 +44,7 @@ describe('Auth', () => {
       },
     );
 
-    it.each(['', '123', 'short'])(
+    it.each(['', '123', 'short', '12345678901234567890123456'])(
       'should return a BadRequest error if password is invalid (%s)',
       async (password) => {
         await request(app.getHttpServer())
