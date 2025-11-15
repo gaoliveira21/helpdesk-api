@@ -1,9 +1,12 @@
 import { InMemoryUserRepository } from 'src/@core/adapters/repositories/in_memory/user.repository';
 
-import { UpdatePassword } from './update_password.usecase';
 import { UserEntity } from 'src/@core/domain/entities/user.entity';
 import { PasswordHash, Uuid } from 'src/@core/domain/value_objects';
 import { UserRoleEnum } from 'src/@core/domain/enum/user_role.enum';
+
+import { InvalidCredentialsError } from '../errors/invalid_credentials.error';
+import { UpdatePassword } from './update_password.usecase';
+import { EntityNotFoundError } from '../errors/entity_not_found.error';
 
 describe('UpdatePasswordUseCase', () => {
   const createUseCase = () => {
@@ -22,7 +25,31 @@ describe('UpdatePasswordUseCase', () => {
       newPassword: 'newPassword123',
     });
 
-    expect(error?.message).toBe('User not found');
+    expect(error).toEqual(new EntityNotFoundError('User'));
+  });
+
+  it('should return an error if current password is incorrect', async () => {
+    const { useCase, userRepository } = createUseCase();
+
+    const passwordHash = await PasswordHash.create('correctPassword123');
+    const user = UserEntity.restore({
+      id: new Uuid().value,
+      email: 'user@example.com',
+      name: 'Test User',
+      passwordHash: passwordHash.value,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      role: UserRoleEnum.ADMIN,
+    });
+    await userRepository.save(user);
+
+    const { error } = await useCase.execute({
+      userId: user.id.value,
+      currentPassword: 'wrongPassword',
+      newPassword: 'newPassword123',
+    });
+
+    expect(error).toBeInstanceOf(InvalidCredentialsError);
   });
 
   it('should update the password successfully', async () => {

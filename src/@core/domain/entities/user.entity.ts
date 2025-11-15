@@ -93,7 +93,7 @@ export class UserEntity extends Entity {
   ) {
     const match = await this.doesPasswordMatch(currentPlainTextPassword);
     if (!match) {
-      throw new Error('Current password does not match.');
+      return new Error('Current password does not match.');
     }
     this._passwordHash = await PasswordHash.create(newPlainTextPassword);
     this._updatedAt = new Date();

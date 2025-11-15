@@ -124,9 +124,9 @@ describe('UserEntity', () => {
       updatedAt: new Date(),
     });
 
-    await expect(
-      user.changePassword('wrongPassword', 'newPassword123'),
-    ).rejects.toThrow('Current password does not match.');
+    const error = await user.changePassword('wrongPassword', 'newPassword123');
+
+    expect(error).toEqual(new Error('Current password does not match.'));
   });
 
   it('should change the password of the user', async () => {

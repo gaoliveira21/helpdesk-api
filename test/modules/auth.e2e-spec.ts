@@ -67,6 +67,7 @@ describe('Auth', () => {
         .expect(400)
         .expect(({ body }) => {
           expect(body.message).toContain('Invalid credentials');
+          expect(body.type).toContain('InvalidCredentialsError');
         });
     });
 

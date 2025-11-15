@@ -6,6 +6,7 @@ import { InMemoryUserRepository } from 'src/@core/adapters/repositories/in_memor
 import { PasswordHash, Uuid } from 'src/@core/domain/value_objects';
 import { UserEntity } from 'src/@core/domain/entities';
 import { UserRoleEnum } from 'src/@core/domain/enum/user_role.enum';
+import { EntityNotFoundError } from '../errors/entity_not_found.error';
 
 describe('RefreshAccessTokenUseCase', () => {
   const createUseCase = (tokenExp: TimeDuration = '30min') => {
@@ -52,7 +53,7 @@ describe('RefreshAccessTokenUseCase', () => {
     });
 
     expect(data).toBeNull();
-    expect(error).toEqual(new Error('User not found'));
+    expect(error).toEqual(new EntityNotFoundError('User'));
   });
 
   it.each<{ duration: TimeDuration; ms: number }>([

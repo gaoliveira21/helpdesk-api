@@ -58,6 +58,20 @@ describe('Users', () => {
       },
     );
 
+    it('should return a BadRequest error if current password is incorrect', async () => {
+      await agent
+        .patch('/users/password')
+        .send({
+          newPassword: 'ValidNewPassword1',
+          currentPassword: 'IncorrectCurrentPassword',
+        })
+        .expect(400)
+        .expect(({ body }) => {
+          expect(body.message).toBe('Current password does not match.');
+          expect(body.type).toBe('InvalidCredentialsError');
+        });
+    });
+
     it('should update the user password successfully', async () => {
       await agent
         .patch('/users/password')

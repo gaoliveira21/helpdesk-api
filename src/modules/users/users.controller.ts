@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   HttpCode,
@@ -13,6 +14,7 @@ import { User } from 'src/modules/@shared/decorators/user.decorator';
 import type { AuthenticatedUser } from 'src/modules/@shared/types/authenticated_user.type';
 
 import { UpdateUserPasswordDto } from './dtos/update_user_password.dto';
+import { InvalidCredentialsError } from 'src/@core/application/errors/invalid_credentials.error';
 
 @Controller('users')
 export class UsersController {
@@ -31,7 +33,12 @@ export class UsersController {
     });
 
     if (error) {
-      throw new InternalServerErrorException(error.message);
+      switch (true) {
+        case error instanceof InvalidCredentialsError:
+          throw new BadRequestException(error.toJSON());
+        default:
+          throw new InternalServerErrorException('Failed to update password');
+      }
     }
   }
 }

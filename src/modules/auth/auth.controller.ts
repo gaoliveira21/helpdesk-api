@@ -36,12 +36,9 @@ export class AuthController {
     });
 
     if (error) {
-      switch (error.constructor) {
-        case InvalidCredentialsError:
-          throw new BadRequestException({
-            type: error.name,
-            message: error.message,
-          });
+      switch (true) {
+        case error instanceof InvalidCredentialsError:
+          throw new BadRequestException(error.toJSON());
         default:
           throw new InternalServerErrorException('Authentication failed');
       }

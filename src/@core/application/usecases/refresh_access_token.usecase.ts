@@ -9,6 +9,7 @@ import { Time } from 'src/@core/domain/value_objects';
 import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
 import { UserRepository } from 'src/@core/application/ports/repositories/user_repository.port';
 import { JwtSignerVerifier } from 'src/@core/application/ports/jwt/jwt_signer_verifier.port';
+import { EntityNotFoundError } from '../errors/entity_not_found.error';
 
 export class RefreshAccessToken implements RefreshAccessTokenUseCase {
   constructor(
@@ -26,7 +27,7 @@ export class RefreshAccessToken implements RefreshAccessTokenUseCase {
     if (error) return { data: null, error };
 
     const user = await this.userRepository.findById(data.userId);
-    if (!user) return { data: null, error: new Error('User not found') };
+    if (!user) return { data: null, error: new EntityNotFoundError('User') };
 
     const accessTokenTtl = this.confProvider.get('auth.accessTokenExpiresIn');
     const accessToken = await this.jwtProvider.sign(

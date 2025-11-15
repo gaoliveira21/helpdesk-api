@@ -1,6 +1,8 @@
-export class InvalidCredentialsError extends Error {
-  constructor(options?: ErrorOptions) {
-    super('Invalid credentials', options);
+import { ApplicationError } from './application.error';
+
+export class InvalidCredentialsError extends ApplicationError {
+  constructor(message = 'Invalid credentials', options?: ErrorOptions) {
+    super(message, options);
     this.name = 'InvalidCredentialsError';
   }
 }
