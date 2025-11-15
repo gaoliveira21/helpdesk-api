@@ -93,6 +93,51 @@ describe('Auth', () => {
     });
   });
 
+  describe('POST /auth/refresh-token', () => {
+    it('should return 401 if refresh token is missing', async () => {
+      await request(app.getHttpServer())
+        .post('/auth/refresh-token')
+        .expect(401)
+        .expect(({ body }) => {
+          expect(body.message).toContain('Invalid refresh token');
+        });
+    });
+
+    it('should return 401 if refresh token is invalid', async () => {
+      await request(app.getHttpServer())
+        .post('/auth/refresh-token')
+        .set('Cookie', ['refreshToken=invalid.token.here'])
+        .expect(401)
+        .expect(({ body }) => {
+          expect(body.message).toContain('Invalid refresh token');
+        });
+    });
+
+    it('should return 200 and set new cookies if refresh token is valid', async () => {
+      const agent = request.agent(app.getHttpServer());
+
+      await agent.post('/auth').send({
+        email: process.env.DEFAULT_ADMIN_EMAIL,
+        password: process.env.DEFAULT_ADMIN_PASSWORD,
+      });
+
+      await agent
+        .post('/auth/refresh-token')
+        .expect(200)
+        .expect(({ body, headers }) => {
+          expect(body.accessTokenExpiresAt).toBeDefined();
+          expect(headers['set-cookie']).toMatchObject([
+            expect.stringMatching(
+              /accessToken=.+; Path=\/; Expires=.+; HttpOnly; SameSite=None/,
+            ),
+            expect.stringMatching(
+              /refreshToken=.+; Path=\/auth\/refresh-token; Expires=.+; HttpOnly; SameSite=None/,
+            ),
+          ]);
+        });
+    });
+  });
+
   describe('DELETE /auth/sign-out', () => {
     it('should clear authentication cookies on sign-out', async () => {
       const agent = request.agent(app.getHttpServer());

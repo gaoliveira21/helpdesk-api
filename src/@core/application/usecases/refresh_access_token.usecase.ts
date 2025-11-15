@@ -5,14 +5,13 @@ import {
 } from 'src/@core/domain/usecases/refresh_access_token.usecase';
 import { Result } from 'src/@core/domain/usecases/usecase.interface';
 
-import { JwtVerifier } from 'src/@core/application/ports/jwt/jwt_verifier.port';
-import { JwtSigner } from 'src/@core/application/ports/jwt/jwt_signer.port';
 import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
 import { UserRepository } from 'src/@core/application/ports/repositories/user_repository.port';
+import { JwtSignerVerifier } from 'src/@core/application/ports/jwt/jwt_signer_verifier.port';
 
 export class RefreshAccessToken implements RefreshAccessTokenUseCase {
   constructor(
-    private readonly jwtProvider: JwtVerifier & JwtSigner,
+    private readonly jwtProvider: JwtSignerVerifier,
     private readonly confProvider: ConfProvider,
     private readonly userRepository: UserRepository,
   ) {}
@@ -29,10 +28,16 @@ export class RefreshAccessToken implements RefreshAccessTokenUseCase {
     if (!user) return { data: null, error: new Error('User not found') };
 
     const accessTokenTtl = this.confProvider.get('auth.accessTokenExpiresIn');
-    const accessToken = await this.jwtProvider.sign(data, accessTokenTtl);
+    const accessToken = await this.jwtProvider.sign(
+      { userId: user.id },
+      accessTokenTtl,
+    );
 
     const refreshTokenTtl = this.confProvider.get('auth.refreshTokenExpiresIn');
-    const refreshToken = await this.jwtProvider.sign(data, refreshTokenTtl);
+    const refreshToken = await this.jwtProvider.sign(
+      { userId: user.id },
+      refreshTokenTtl,
+    );
 
     return {
       data: {
