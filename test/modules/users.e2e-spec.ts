@@ -57,5 +57,32 @@ describe('Users', () => {
           });
       },
     );
+
+    it('should update the user password successfully', async () => {
+      await agent
+        .patch('/users/password')
+        .send({
+          newPassword: 'NewValidPassword1',
+          currentPassword: process.env.DEFAULT_ADMIN_PASSWORD,
+        })
+        .expect(204);
+
+      await agent
+        .post('/auth')
+        .send({
+          email: process.env.DEFAULT_ADMIN_EMAIL,
+          password: 'NewValidPassword1',
+        })
+        .expect(201);
+
+      // Revert password change for other tests
+      await agent
+        .patch('/users/password')
+        .send({
+          newPassword: process.env.DEFAULT_ADMIN_PASSWORD,
+          currentPassword: 'NewValidPassword1',
+        })
+        .expect(204);
+    });
   });
 });
