@@ -30,13 +30,13 @@ export class RefreshAccessToken implements RefreshAccessTokenUseCase {
 
     const accessTokenTtl = this.confProvider.get('auth.accessTokenExpiresIn');
     const accessToken = await this.jwtProvider.sign(
-      { userId: user.id },
+      { userId: user.id.value },
       accessTokenTtl,
     );
 
     const refreshTokenTtl = this.confProvider.get('auth.refreshTokenExpiresIn');
     const refreshToken = await this.jwtProvider.sign(
-      { userId: user.id },
+      { userId: user.id.value },
       refreshTokenTtl,
     );
 
