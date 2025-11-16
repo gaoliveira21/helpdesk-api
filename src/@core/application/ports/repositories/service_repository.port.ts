@@ -4,3 +4,5 @@ export interface ServiceRepository {
   save(service: ServiceEntity): Promise<void>;
   findById(id: string): Promise<ServiceEntity | null>;
 }
+
+export const ServiceRepository = Symbol('ServiceRepository');

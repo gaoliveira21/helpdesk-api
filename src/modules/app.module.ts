@@ -23,6 +23,7 @@ import { ValidateAuthenticatedUser } from 'src/@core/application/usecases/valida
 import { AuthMiddleware } from './@shared/middlewares/auth.middleware';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { UsersModule } from './users/users.module';
     }),
     AuthModule,
     UsersModule,
+    TicketsModule,
   ],
   controllers: [],
   providers: [
