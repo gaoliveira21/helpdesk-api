@@ -1,10 +1,18 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  TableInheritance,
+} from 'typeorm';
 
 import { UserEntity } from 'src/@core/domain/entities';
 
 import { UserRole } from './user_role';
 
 @Entity('users')
+@TableInheritance({ column: { type: 'varchar', name: 'user_type' } })
 export class User {
   @PrimaryColumn()
   id: string;
