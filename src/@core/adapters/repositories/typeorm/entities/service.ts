@@ -1,5 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+
 import { ServiceEntity } from 'src/@core/domain/entities';
+
+import { ColumnNumericTransformer } from '../transformers/column_numeric.transformer';
 import { Admin } from './admin';
 
 @Entity('services')
@@ -10,7 +13,12 @@ export class Service {
   @Column()
   name: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   price: number;
 
   @Column()
