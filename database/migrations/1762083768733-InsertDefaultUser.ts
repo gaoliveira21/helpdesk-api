@@ -24,6 +24,7 @@ export class InsertDefaultUser1762083768733 implements MigrationInterface {
       email,
       password_hash: hashedPassword,
       role_id: 1,
+      user_type: 'Admin',
     });
   }
 
