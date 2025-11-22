@@ -1,12 +1,11 @@
+import { UserEntityBuilder } from 'src/__tests__/data_builders/entities';
 import { InMemoryUserRepository } from 'src/@core/adapters/repositories/in_memory';
-import { UserEntity } from 'src/@core/domain/entities';
-import { PasswordHash, Uuid } from 'src/@core/domain/value_objects';
-import { UserRoleEnum } from 'src/@core/domain/enum/user_role.enum';
+import { AppConfProvider } from 'src/@core/adapters/conf/app_conf_provider';
 import { JwtProvider } from 'src/@core/adapters/jwt/jwt_provider';
 
-import { Authenticate } from './authenticate.usecase';
-import { AppConfProvider } from 'src/@core/adapters/conf/app_conf_provider';
 import { InvalidCredentialsError } from '../errors/invalid_credentials.error';
+
+import { Authenticate } from './authenticate.usecase';
 
 describe('AuthenticateUseCase', () => {
   const createUseCase = (tokenExp: TimeDuration = '30min') => {
@@ -44,21 +43,13 @@ describe('AuthenticateUseCase', () => {
   it('should throw an error if password is incorrect', async () => {
     const { useCase, userRepository } = createUseCase();
 
-    const passwordHash = await PasswordHash.create('hashed_password');
-    const user = UserEntity.restore({
-      id: new Uuid().value,
-      email: 'test@example.com',
-      passwordHash: passwordHash.value,
-      name: 'Test User',
-      role: UserRoleEnum.ADMIN,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    const userBuilder = await UserEntityBuilder.createAdmin();
+    const user = userBuilder.build();
     await userRepository.save(user);
 
     const input = {
-      email: 'test@example.com',
-      password: 'wrongpassword',
+      email: user.email.value,
+      password: 'incorrect_password',
     };
 
     const result = await useCase.execute(input);
@@ -87,21 +78,13 @@ describe('AuthenticateUseCase', () => {
       const { useCase, userRepository, jwtProvider, confProvider } =
         createUseCase(duration);
 
-      const passwordHash = await PasswordHash.create('correct_password');
-      const user = UserEntity.restore({
-        id: new Uuid().value,
-        email: 'test@example.com',
-        passwordHash: passwordHash.value,
-        name: 'Test User',
-        role: UserRoleEnum.ADMIN,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+      const userBuilder = await UserEntityBuilder.createAdmin();
+      const user = userBuilder.build();
       await userRepository.save(user);
 
       const input = {
-        email: 'test@example.com',
-        password: 'correct_password',
+        email: user.email.value,
+        password: userBuilder.plainTextPassword,
       };
 
       const result = await useCase.execute(input);

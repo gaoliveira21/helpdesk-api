@@ -1,12 +1,11 @@
 import { AppConfProvider } from 'src/@core/adapters/conf/app_conf_provider';
 import { JwtProvider } from 'src/@core/adapters/jwt/jwt_provider';
+import { InMemoryUserRepository } from 'src/@core/adapters/repositories/in_memory';
+import { UserEntityBuilder } from 'src/__tests__/data_builders/entities';
+
+import { EntityNotFoundError } from '../errors/entity_not_found.error';
 
 import { RefreshAccessToken } from './refresh_access_token.usecase';
-import { InMemoryUserRepository } from 'src/@core/adapters/repositories/in_memory';
-import { PasswordHash, Uuid } from 'src/@core/domain/value_objects';
-import { UserEntity } from 'src/@core/domain/entities';
-import { UserRoleEnum } from 'src/@core/domain/enum/user_role.enum';
-import { EntityNotFoundError } from '../errors/entity_not_found.error';
 
 describe('RefreshAccessTokenUseCase', () => {
   const createUseCase = (tokenExp: TimeDuration = '30min') => {
@@ -68,9 +67,10 @@ describe('RefreshAccessTokenUseCase', () => {
         .spyOn(JwtProvider.prototype, 'sign')
         .mockResolvedValue('mocked_jwt_token');
 
-      const userId = new Uuid().value;
+      const user = (await UserEntityBuilder.createAdmin()).build();
+
       jest.spyOn(JwtProvider.prototype, 'verify').mockResolvedValueOnce({
-        data: { userId },
+        data: { userId: user.id.value },
         error: null,
       });
 
@@ -80,16 +80,6 @@ describe('RefreshAccessTokenUseCase', () => {
       const { useCase, jwtProvider, userRepository, confProvider } =
         createUseCase(duration);
 
-      const passwordHash = await PasswordHash.create('hashed_password');
-      const user = UserEntity.restore({
-        id: userId,
-        email: 'test@example.com',
-        passwordHash: passwordHash.value,
-        name: 'Test User',
-        role: UserRoleEnum.ADMIN,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
       await userRepository.save(user);
 
       const { data, error } = await useCase.execute({

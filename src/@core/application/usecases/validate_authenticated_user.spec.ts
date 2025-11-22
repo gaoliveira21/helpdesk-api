@@ -1,9 +1,8 @@
+import { UserEntityBuilder } from 'src/__tests__/data_builders/entities';
+
 import { AppConfProvider } from 'src/@core/adapters/conf/app_conf_provider';
 import { JwtProvider } from 'src/@core/adapters/jwt/jwt_provider';
 import { InMemoryUserRepository } from 'src/@core/adapters/repositories/in_memory';
-import { UserEntity } from 'src/@core/domain/entities';
-import { Uuid } from 'src/@core/domain/value_objects';
-import { UserRoleEnum } from 'src/@core/domain/enum/user_role.enum';
 
 import { ValidateAuthenticatedUser } from './validate_authenticated_user';
 
@@ -50,15 +49,7 @@ describe('ValidateAuthenticatedUserUseCase', () => {
   it('should return user data for a valid access token', async () => {
     const { useCase, jwtVerifier, userRepository } = createUseCase();
 
-    const user = UserEntity.restore({
-      id: new Uuid().value,
-      email: 'test@example.com',
-      passwordHash: 'hashed_password',
-      name: 'Test User',
-      role: UserRoleEnum.ADMIN,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    const user = (await UserEntityBuilder.createAdmin()).build();
     await userRepository.save(user);
 
     jest.spyOn(jwtVerifier, 'verify').mockResolvedValueOnce({
