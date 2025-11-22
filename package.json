@@ -23,6 +23,7 @@
     "migration:create": "npm run typeorm migration:create --"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.1.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
@@ -86,7 +87,7 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "transformIgnorePatterns": [
-      "/node_modules/(?!uuid)"
+      "/node_modules/(?!uuid|!@faker-js/faker).+\\.ts$"
     ],
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1"
