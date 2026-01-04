@@ -4,11 +4,13 @@ import { DataSource } from 'typeorm';
 import { TypeORMUserRepository } from 'src/@core/adapters/repositories/typeorm';
 import { AppConfProvider } from 'src/@core/adapters/conf/app_conf_provider';
 import { JwtProvider } from 'src/@core/adapters/jwt/jwt_provider';
+import { CsrfProvider } from 'src/@core/adapters/csrf/csrf_provider';
 
 import { UserRepository } from 'src/@core/application/ports/repositories/user_repository.port';
 import { JwtSignerVerifier } from 'src/@core/application/ports/jwt/jwt_signer_verifier.port';
 import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
 import { JwtSigner } from 'src/@core/application/ports/jwt/jwt_signer.port';
+import { CsrfGenerator } from 'src/@core/application/ports/csrf/csrf_generator.port';
 
 import { Authenticate } from 'src/@core/application/usecases/authenticate.usecase';
 import { RefreshAccessToken } from 'src/@core/application/usecases/refresh_access_token.usecase';
@@ -20,6 +22,12 @@ import { AuthController } from './auth.controller';
     {
       provide: ConfProvider,
       useClass: AppConfProvider,
+    },
+    {
+      provide: CsrfGenerator,
+      useFactory: (confProvider: ConfProvider) =>
+        new CsrfProvider(confProvider),
+      inject: [ConfProvider],
     },
     {
       provide: UserRepository,

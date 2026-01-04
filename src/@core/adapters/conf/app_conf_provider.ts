@@ -37,6 +37,9 @@ export class AppConfProvider implements ConfProvider {
         accessTokenExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
         refreshTokenExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
       },
+      csrf: {
+        secret: process.env.CSRF_SECRET || '',
+      },
     } as Config;
   }
 
@@ -55,6 +58,9 @@ export class AppConfProvider implements ConfProvider {
         secret: z.string().nonempty(),
         accessTokenExpiresIn: timeDurationSchema,
         refreshTokenExpiresIn: timeDurationSchema,
+      }),
+      csrf: z.object({
+        secret: z.string().nonempty(),
       }),
     });
 

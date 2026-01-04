@@ -8,6 +8,9 @@ export type Config = {
     accessTokenExpiresIn: TimeDuration;
     refreshTokenExpiresIn: TimeDuration;
   };
+  csrf: {
+    secret: string;
+  };
 };
 
 export interface ConfProvider {

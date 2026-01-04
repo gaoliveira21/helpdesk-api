@@ -15,6 +15,7 @@ import type { Response, Request } from 'express';
 import { InvalidCredentialsError } from 'src/@core/application/errors/invalid_credentials.error';
 import { Authenticate } from 'src/@core/application/usecases/authenticate.usecase';
 import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
+import { CsrfGenerator } from 'src/@core/application/ports/csrf/csrf_generator.port';
 import { RefreshAccessToken } from 'src/@core/application/usecases/refresh_access_token.usecase';
 
 import { AuthenticateDto } from './dtos/authenticate.dto';
@@ -26,6 +27,8 @@ export class AuthController {
     private readonly refreshAccessToken: RefreshAccessToken,
     @Inject(ConfProvider)
     private readonly confProvider: ConfProvider,
+    @Inject(CsrfGenerator)
+    private readonly csrfGenerator: CsrfGenerator,
   ) {}
 
   @Post()
@@ -85,6 +88,17 @@ export class AuthController {
     return res.status(HttpStatus.OK).send({
       accessTokenExpiresAt: data.accessToken.expiresAt,
     });
+  }
+
+  @Post('csrf-token')
+  async getCsrfToken(@Res() res: Response) {
+    const csrfToken = this.csrfGenerator.generate();
+    res.cookie('csrfToken', csrfToken, {
+      httpOnly: false,
+      secure: this.confProvider.get('app.env') === 'production',
+      sameSite: 'none',
+    });
+    return res.status(HttpStatus.CREATED).send({ csrfToken });
   }
 
   @Delete('sign-out')

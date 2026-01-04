@@ -25,6 +25,9 @@ describe('Tickets', () => {
 
     agent = request.agent(app.getHttpServer());
 
+    const res = await agent.post('/auth/csrf-token');
+    agent.set('x-csrf-token', res.body.csrfToken);
+
     await agent.post('/auth').send({
       email: process.env.DEFAULT_ADMIN_EMAIL,
       password: process.env.DEFAULT_ADMIN_PASSWORD,
