@@ -16,6 +16,7 @@ describe('AppConfProvider', () => {
       accessTokenExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
       refreshTokenExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
     });
+    expect(confProvider.get('allowedOrigins')).toHaveLength(2);
   });
 
   it('should throw an error if configuration is invalid', () => {

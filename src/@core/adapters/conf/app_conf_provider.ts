@@ -40,6 +40,9 @@ export class AppConfProvider implements ConfProvider {
       csrf: {
         secret: process.env.CSRF_SECRET || '',
       },
+      allowedOrigins: process.env.ALLOWED_ORIGINS
+        ? process.env.ALLOWED_ORIGINS.split(',').map((origin) => origin.trim())
+        : [],
     } as Config;
   }
 
@@ -62,6 +65,7 @@ export class AppConfProvider implements ConfProvider {
       csrf: z.object({
         secret: z.string().nonempty(),
       }),
+      allowedOrigins: z.array(z.url()).nonempty(),
     });
 
     const result = schema.safeParse(this._config);

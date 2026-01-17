@@ -11,6 +11,7 @@ export type Config = {
   csrf: {
     secret: string;
   };
+  allowedOrigins: string[];
 };
 
 export interface ConfProvider {

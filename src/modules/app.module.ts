@@ -22,11 +22,13 @@ import { ConfProvider } from 'src/@core/application/ports/conf_provider.port';
 import { ValidateAuthenticatedUser } from 'src/@core/application/usecases/validate_authenticated_user';
 import { CsrfVerifier } from 'src/@core/application/ports/csrf/csrf_verifier.port';
 
+import { AllowedOriginMiddleware } from './@shared/middlewares/allowed_origins.middleware';
 import { AuthMiddleware } from './@shared/middlewares/auth.middleware';
+import { CsrfMiddleware } from './@shared/middlewares/csrf.middleware';
+
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TicketsModule } from './tickets/tickets.module';
-import { CsrfMiddleware } from './@shared/middlewares/csrf.middleware';
 
 @Module({
   imports: [
@@ -84,6 +86,8 @@ import { CsrfMiddleware } from './@shared/middlewares/csrf.middleware';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
+      .apply(AllowedOriginMiddleware)
+      .forRoutes('*')
       .apply(CsrfMiddleware)
       .exclude({
         method: RequestMethod.POST,
